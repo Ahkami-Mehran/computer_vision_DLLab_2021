@@ -1,0 +1,51 @@
+Pool webpage:
+
+http://poolmgr.informatik.uni-freiburg.de
+
+pool GPUs versions Geforce GTX 1060 Dual 3GB
+> nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2016 NVIDIA Corporation
+Built on Tue_Jan_10_13:22:03_CST_2017
+Cuda compilation tools, release 8.0, V8.0.61 
+
+List of computers with GPU:
+
+tfpool20
+tfpool21
+tfpool22
+tfpool23
+tfpool24
+tfpool25
+tfpool26
+tfpool27
+tfpool28
+tfpool29
+
+tfpool32
+
+tfpool34
+tfpool35
+tfpool36
+tfpool37
+tfpool38
+tfpool39
+tfpool40
+tfpool41
+tfpool42
+tfpool43
+tfpool44
+tfpool45
+tfpool46
+
+tfpool53
+tfpool54
+tfpool55
+tfpool56
+tfpool57
+tfpool58
+tfpool59
+tfpool60
+tfpool61
+
+tfpool63
