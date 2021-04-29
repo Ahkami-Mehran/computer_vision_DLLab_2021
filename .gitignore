@@ -1,0 +1,4 @@
+crops
+COCO_mini5class_medium
+pretrain_weights_init.pth
+binary_segmentation.pth

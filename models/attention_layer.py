@@ -2,21 +2,25 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
 class Attention(nn.Module):
     def __init__(self, encoder_dim, att_type):
         super(Attention, self).__init__()
-        if att_type=='additive':
+        if att_type == "additive":
             self.attention_layer = AdditiveAttention(encoder_dim)
-        elif att_type=='dotprod':
+        elif att_type == "dotprod":
             self.attention_layer = DotProdAttention(encoder_dim)
         else:
-            raise ValueError('Attention mechanism not defined: '+str(att_type))
+            raise ValueError("Attention mechanism not defined: " + str(att_type))
 
     def forward(self, encoder_output, hidden_state, sum_context=False):
         context, alpha = self.attention_layer(encoder_output, hidden_state)
         if sum_context:
             context = context.sum(1)
         return context, alpha
+
 
 # Additive Attention
 class AdditiveAttention(nn.Module):
@@ -41,9 +45,10 @@ class AdditiveAttention(nn.Module):
         # e = V^tanh(Ws + Uh) ------ torch.Size([24, 49])
         alpha = self.softmax(e)
         # alpha ------ torch.Size([24, 49])
-        context = (encoder_output * alpha.unsqueeze(2))
+        context = encoder_output * alpha.unsqueeze(2)
         # context ------ torch.Size([24, 49, 2048])
         return context, alpha
+
 
 # Dot-Product Based or General Multiplicative Attention
 class DotProdAttention(nn.Module):
@@ -55,12 +60,13 @@ class DotProdAttention(nn.Module):
         # Verify sizes
         return context, alpha
 
+
 if __name__ == "__main__":
-    model = Attention(512, 'additive').cuda()
+    model = Attention(512, "additive").to(device)
     model.eval()
     print(model)
-    encoder_output = torch.randn(2, 256, 512).cuda()
-    v_embedding = torch.randn(2, 512).cuda()
+    encoder_output = torch.randn(2, 256, 512).to(device)
+    v_embedding = torch.randn(2, 512).to(device)
     with torch.no_grad():
         output, alpha = model.forward(encoder_output, v_embedding)
     print(output.size())

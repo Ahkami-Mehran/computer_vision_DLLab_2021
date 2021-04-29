@@ -12,22 +12,33 @@ from models.att_segmentation import AttSegmentator
 from torch.utils.tensorboard import SummaryWriter
 from data.transforms import get_transforms_binary_segmentation
 from models.pretraining_backbone import ResNet18Backbone
-from data.segmentation import DataReaderSingleClassSemanticSegmentationVector, DataReaderSemanticSegmentationVector
+from data.segmentation import (
+    DataReaderSingleClassSemanticSegmentationVector,
+    DataReaderSemanticSegmentationVector,
+)
 
 set_random_seed(0)
 global_step = 0
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('data_folder', type=str, help="folder containing the data")
-    parser.add_argument('--pretrained_model_path', type=str, default='')
-    parser.add_argument('--output-root', type=str, default='results')
-    parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
-    parser.add_argument('--bs', type=int, default=32, help='batch_size')
-    parser.add_argument('--att', type=str, default='sdotprod', help='Type of attention. Choose from {additive, cosine, dotprod, sdotprod}')
-    parser.add_argument('--size', type=int, default=256, help='image size')
-    parser.add_argument('--snapshot-freq', type=int, default=5, help='how often to save models')
-    parser.add_argument('--exp-suffix', type=str, default="")
+    parser.add_argument("data_folder", type=str, help="folder containing the data")
+    parser.add_argument("--pretrained_model_path", type=str, default="")
+    parser.add_argument("--output-root", type=str, default="results")
+    parser.add_argument("--lr", type=float, default=0.0001, help="learning rate")
+    parser.add_argument("--bs", type=int, default=32, help="batch_size")
+    parser.add_argument(
+        "--att",
+        type=str,
+        default="sdotprod",
+        help="Type of attention. Choose from {additive, cosine, dotprod, sdotprod}",
+    )
+    parser.add_argument("--size", type=int, default=256, help="image size")
+    parser.add_argument(
+        "--snapshot-freq", type=int, default=5, help="how often to save models"
+    )
+    parser.add_argument("--exp-suffix", type=str, default="")
     args = parser.parse_args()
 
     hparam_keys = ["lr", "bs", "att"]
@@ -35,7 +46,9 @@ def parse_arguments():
 
     args.exp_name += "_{}_{}".format(args.exp_suffix)
 
-    args.output_folder = check_dir(os.path.join(args.output_root, 'dt_attseg', args.exp_name))
+    args.output_folder = check_dir(
+        os.path.join(args.output_root, "dt_attseg", args.exp_name)
+    )
     args.model_folder = check_dir(os.path.join(args.output_folder, "models"))
     args.logs_folder = check_dir(os.path.join(args.output_folder, "logs"))
 
@@ -58,14 +71,19 @@ def main(args):
 
     # dataset
     data_root = args.data_folder
-    train_transform, val_transform, train_transform_mask, val_transform_mask = get_transforms_binary_segmentation(args)
+    (
+        train_transform,
+        val_transform,
+        train_transform_mask,
+        val_transform_mask,
+    ) = get_transforms_binary_segmentation(args)
     vec_transform = ToTensor()
     train_data = DataReaderSingleClassSemanticSegmentationVector(
         os.path.join(data_root, "imgs/train2014"),
         os.path.join(data_root, "aggregated_annotations_train_5classes.json"),
         transform=train_transform,
         vec_transform=vec_transform,
-        target_transform=train_transform_mask
+        target_transform=train_transform_mask,
     )
     # Note that the dataloaders are different.
     # During validation we want to pass all the semantic classes for each image
@@ -75,14 +93,25 @@ def main(args):
         os.path.join(data_root, "aggregated_annotations_val_5classes.json"),
         transform=val_transform,
         vec_transform=vec_transform,
-        target_transform=val_transform_mask
+        target_transform=val_transform_mask,
     )
 
-    train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.bs, shuffle=True,
-                                               num_workers=6, pin_memory=True, drop_last=True)
-    val_loader = torch.utils.data.DataLoader(val_data, batch_size=1, shuffle=False,
-                                             num_workers=6, pin_memory=True, drop_last=False)
-
+    train_loader = torch.utils.data.DataLoader(
+        train_data,
+        batch_size=args.bs,
+        shuffle=True,
+        num_workers=6,
+        pin_memory=True,
+        drop_last=True,
+    )
+    val_loader = torch.utils.data.DataLoader(
+        val_data,
+        batch_size=1,
+        shuffle=False,
+        num_workers=6,
+        pin_memory=True,
+        drop_last=False,
+    )
 
     # TODO: loss
     criterion = None
@@ -92,8 +121,8 @@ def main(args):
 
     expdata = "  \n".join(["{} = {}".format(k, v) for k, v in vars(args).items()])
     logger.info(expdata)
-    logger.info('train_data {}'.format(train_data.__len__()))
-    logger.info('val_data {}'.format(val_data.__len__()))
+    logger.info("train_data {}".format(train_data.__len__()))
+    logger.info("val_data {}".format(val_data.__len__()))
 
     best_val_loss = np.inf
     best_val_miou = 0.0
@@ -104,6 +133,7 @@ def main(args):
 
         # TODO save model
         raise NotImplementedError("TODO: implement the code for saving the model")
+
 
 def train(loader, model, criterion, optimizer, log, logger):
     logger.info("Training")
@@ -121,7 +151,12 @@ def train(loader, model, criterion, optimizer, log, logger):
         v_class = v_class.float().cuda().squeeze()
         logits, alphas = model(img, v_class, out_att=True)
         logits = logits.squeeze()
-        labels = (torch.nn.functional.interpolate(label.cuda(), size=logits.shape[-2:]).squeeze(1)*256).long()
+        labels = (
+            torch.nn.functional.interpolate(
+                label.cuda(), size=logits.shape[-2:]
+            ).squeeze(1)
+            * 256
+        ).long()
         loss = criterion(logits, labels)
         iou = mIoU(logits, labels)
 
@@ -132,18 +167,28 @@ def train(loader, model, criterion, optimizer, log, logger):
 
         loss_meter.add(loss.item())
         iou_meter.add(iou)
-        time_meter.add(time.time()-batch_time)
+        time_meter.add(time.time() - batch_time)
 
-        if idx % 50 == 0 or idx == len(loader)-1:
+        if idx % 50 == 0 or idx == len(loader) - 1:
             text_print = "Epoch {:.4f} Avg loss = {:.4f} mIoU = {:.4f} Time {:.2f} (Total:{:.2f}) Progress {}/{}".format(
-                        global_step / steps_per_epoch, loss_meter.mean, iou_meter.mean, time_meter.mean, time.time()-start_time, idx, int(steps_per_epoch))
+                global_step / steps_per_epoch,
+                loss_meter.mean,
+                iou_meter.mean,
+                time_meter.mean,
+                time.time() - start_time,
+                idx,
+                int(steps_per_epoch),
+            )
             logger.info(text_print)
             loss_meter.reset()
             iou_meter.reset()
 
         batch_time = time.time()
-    time_txt = "batch time: {:.2f} total time: {:.2f}".format(time_meter.mean, time.time()-start_time)
+    time_txt = "batch time: {:.2f} total time: {:.2f}".format(
+        time_meter.mean, time.time() - start_time
+    )
     logger.info(time_txt)
+
 
 def validate(loader, model, criterion, log, logger, epoch=0):
     logger.info("Validating Epoch {}".format(epoch))
@@ -158,17 +203,25 @@ def validate(loader, model, criterion, log, logger, epoch=0):
         v_class = v_class.float().cuda().squeeze()
         logits, alphas = model(img, v_class, out_att=True)
         label = label.squeeze(0).unsqueeze(1)
-        labels = (torch.nn.functional.interpolate(label.cuda(), size=logits.shape[-2:]).squeeze(1)*256).long()
+        labels = (
+            torch.nn.functional.interpolate(
+                label.cuda(), size=logits.shape[-2:]
+            ).squeeze(1)
+            * 256
+        ).long()
         loss = criterion(logits, labels)
         iou = mIoU(logits, labels)
 
         loss_meter.add(loss.item())
         iou_meter.add(iou)
 
-    text_print = "Epoch {} Avg loss = {:.4f} mIoU = {:.4f} Time {:.2f}".format(epoch, loss_meter.mean, iou_meter.mean, time.time()-start_time)
+    text_print = "Epoch {} Avg loss = {:.4f} mIoU = {:.4f} Time {:.2f}".format(
+        epoch, loss_meter.mean, iou_meter.mean, time.time() - start_time
+    )
     logger.info(text_print)
     return loss_meter.mean, iou_meter.mean
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     args = parse_arguments()
     main(args)

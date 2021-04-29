@@ -30,8 +30,8 @@ def accuracy(output, target, topk=(1,)):
 
 
 def mIoU(logits, gt, threshold=0.5):
-    if logits.shape[1] == 1 or len(logits.shape)==3:
-        if threshold==0.5:
+    if logits.shape[1] == 1 or len(logits.shape) == 3:
+        if threshold == 0.5:
             pred = logits.round().byte()
         else:
             pred = logits > threshold
@@ -39,24 +39,25 @@ def mIoU(logits, gt, threshold=0.5):
         pred = logits.argmax(dim=1).byte()
     intersection = ((pred == 1) & (gt == 1)).sum().float()
     union = ((pred == 1) | (gt == 1)).sum().float()
-    return intersection/(union+1.)
+    return intersection / (union + 1.0)
 
 
 def instance_mIoU(logits, gt):
     pred = logits.argmax(dim=1).byte()
     ins_iou = []
     for instance in range(logits.shape[1]):
-        if instance==0:
-            continue #do not consider background
+        if instance == 0:
+            continue  # do not consider background
         intersection = ((pred == instance) & (gt == instance)).sum().float()
         union = ((pred == instance) | (gt == instance)).sum().float()
-        if union==0:
+        if union == 0:
             continue
-        iou_val = intersection/(union+1.)
+        iou_val = intersection / (union + 1.0)
         ins_iou.append(iou_val)
 
     mean_iou = torch.mean(torch.stack(ins_iou))
     return mean_iou
+
 
 def set_random_seed(seed):
     # Fix random seed to reproduce results
@@ -93,25 +94,36 @@ def get_logger(logdir, name, evaluate=False):
 
     return logger
 
-def save_in_log(log, save_step, set="", scalar_dict=None, text_dict=None, image_dict=None):
+
+def save_in_log(
+    log, save_step, set="", scalar_dict=None, text_dict=None, image_dict=None
+):
     if scalar_dict:
-        [log.add_scalar(set+"_"+k, v, save_step) for k, v in scalar_dict.items()]
+        [log.add_scalar(set + "_" + k, v, save_step) for k, v in scalar_dict.items()]
     if text_dict:
-        [log.add_text(set+"_"+k, v, save_step) for k, v in text_dict.items()]
+        [log.add_text(set + "_" + k, v, save_step) for k, v in text_dict.items()]
     if image_dict:
         for k, v in image_dict.items():
-            if k=='sample':
-                log.add_images(set+"_"+k, v, save_step)
-            elif k=='vec':
-                log.add_images(set+"_"+k, v.unsqueeze(1).unsqueeze(1), save_step)
-            elif k=='gt':
-                log.add_images(set+"_"+k, v.unsqueeze(1).expand(-1, 3, -1, -1).float()/v.max(), save_step)
-            elif k=='pred':
-                log.add_images(set+"_"+k, v.argmax(dim=1, keepdim=True), save_step)
-            elif k=='att':
+            if k == "sample":
+                log.add_images(set + "_" + k, v, save_step)
+            elif k == "vec":
+                log.add_images(set + "_" + k, v.unsqueeze(1).unsqueeze(1), save_step)
+            elif k == "gt":
+                log.add_images(
+                    set + "_" + k,
+                    v.unsqueeze(1).expand(-1, 3, -1, -1).float() / v.max(),
+                    save_step,
+                )
+            elif k == "pred":
+                log.add_images(set + "_" + k, v.argmax(dim=1, keepdim=True), save_step)
+            elif k == "att":
                 assert isinstance(v, list)
                 for idx, alpha in enumerate(v):
-                    log.add_images(set+"_"+k+"_"+str(idx), (alpha.unsqueeze(1)-alpha.min())/alpha.max(), save_step)
+                    log.add_images(
+                        set + "_" + k + "_" + str(idx),
+                        (alpha.unsqueeze(1) - alpha.min()) / alpha.max(),
+                        save_step,
+                    )
             else:
-                log.add_images(set+"_"+k, v, save_step)
+                log.add_images(set + "_" + k, v, save_step)
     log.flush()

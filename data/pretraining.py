@@ -19,7 +19,7 @@ class DataReaderPlainImg:
         self.image_files = [f for f in os.listdir(root) if f.endswith(".jpg")]
 
     def __getitem__(self, idx):
-        img = Image.open(os.path.join(self.root, self.image_files[idx])).convert('RGB')
+        img = Image.open(os.path.join(self.root, self.image_files[idx])).convert("RGB")
         if self.transform is not None:
             img = self.transform(img)
         return img
