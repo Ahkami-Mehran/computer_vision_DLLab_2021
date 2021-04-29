@@ -64,7 +64,7 @@ def main(args):
     # build model and load weights
     model = ResNet18Backbone(pretrained=False).to(device)
     saved_config = torch.load(args.weights_init, map_location=device)
-    model.load_state_dict(saved_config["model"])
+    model.load_state_dict(saved_config["model"]).to(device)
     model.eval()
 
     # load dataset
@@ -119,7 +119,7 @@ def main(args):
     # Train-validate for one epoch. You don't have to run it for 100 epochs, preferably until it starts overfitting.
     for epoch in range(100):
         print("Epoch {}".format(epoch))
-        train(train_loader, model, criterion, optimizer)
+        train(train_loader, model, criterion, optimizer, epoch)
         # val_loss, val_acc = validate(val_loader, model, criterion)
 
         # save model
@@ -128,10 +128,13 @@ def main(args):
 
 
 # train one epoch over the whole training dataset. You can change the method's signature.
-def train(loader, model, criterion, optimizer):
+def train(loader, model, criterion, optimizer, epoch):
     # raise NotImplementedError("TODO: training routine")
     running_loss = 0.0
+    model.train()
     for i, data in enumerate(loader, 0):
+        # len(loader) gives the number of the bataches
+        # len(loader.dataset) gives the number of datapoints in a batch
         inputs, labels = data
         optimizer.zero_grad()
         outputs = model(inputs)
