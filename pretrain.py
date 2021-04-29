@@ -64,8 +64,7 @@ def main(args):
     # build model and load weights
     model = ResNet18Backbone(pretrained=False).to(device)
     saved_config = torch.load(args.weights_init, map_location=device)
-    model.load_state_dict(saved_config["model"]).to(device)
-    model.eval()
+    model.load_state_dict(saved_config["model"])
 
     # load dataset
     data_root = args.data_folder
@@ -136,6 +135,7 @@ def train(loader, model, criterion, optimizer, epoch):
         # len(loader) gives the number of the bataches
         # len(loader.dataset) gives the number of datapoints in a batch
         inputs, labels = data
+        inputs, labels = inputs.to(device), labels.to(device)
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, labels)
