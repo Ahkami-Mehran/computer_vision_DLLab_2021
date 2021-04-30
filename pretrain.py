@@ -163,13 +163,19 @@ def train(loader, model, criterion, optimizer, epoch, writer):
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
-        # if i % 100 == 99:
-        if i % 2 == 0:
-            print(
-                "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
-                % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
-            )
-            # return the running_loss for further evaluations
+        if device == 'cpu':
+            if i % 2 == 0:
+                print(
+                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
+                    % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
+                )
+        else:
+            if i % 100 == 99:
+                print(
+                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
+                    % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
+                )
+    # return the running_loss for further evaluations
     return running_loss / len(loader)
 
 
@@ -186,20 +192,30 @@ def validate(loader, model, criterion, epoch, writer):
         loss = criterion(outputs, labels)
         acc.append(accuracy(outputs, labels))
         running_loss += loss.item()
-        if i % 2 == 0:
-            print(
-                "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , accuracy: %.3f"
-                % (
-                    epoch + 1,
-                    i + 1,
-                    len(loader),
-                    running_loss / len(loader.dataset),
-                    np.mean(acc),
+        if device == 'cpu':
+            if i % 2 == 0:
+                print(
+                    "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , accuracy: %.3f"
+                    % (
+                        epoch + 1,
+                        i + 1,
+                        len(loader),
+                        running_loss / len(loader.dataset),
+                        np.mean(acc),
+                    )
                 )
-            )
-            
-
-            # return the running_loss for further evaluations
+        else:
+            if i % 10 == 9:
+                print(
+                    "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , accuracy: %.3f"
+                    % (
+                        epoch + 1,
+                        i + 1,
+                        len(loader),
+                        running_loss / len(loader.dataset),
+                        np.mean(acc),
+                    )
+                )
     # return mean_val_loss, mean_val_accuracy
     return running_loss / (len(loader)), np.mean(acc)
 
