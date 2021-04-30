@@ -4,6 +4,7 @@ import argparse
 import torch
 import matplotlib.pyplot as plt
 import torchvision
+import datetime
 
 import torch.nn as nn
 import torch.nn.functional as F
@@ -106,13 +107,14 @@ def main(args):
     )
 
     # Visualize the sample batch of images with the labels
-    # dataiter = iter(train_loader)
-    # images, labels = dataiter.next()
-    # temp_img = torchvision.utils.make_grid(images[:32,:,:,:])
-    # temp_img = temp_img / 2 + 0.5     # unnormalize
-    # npimg = temp_img.numpy()
-    # plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    # plt.show()
+    dataiter = iter(train_loader)
+    images, labels = dataiter.next()
+    print(images[1].shape)
+    temp_img = torchvision.utils.make_grid(images[:32,:,:,:])
+    temp_img = temp_img / 2 + 0.5     # unnormalize
+    npimg = temp_img.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.show()
 
     # TODO: loss function
     criterion = nn.CrossEntropyLoss()
@@ -130,26 +132,28 @@ def main(args):
     # training_loss = []
     # val_loss = []
     # val_acc = []
-    for epoch in range(100):
+    model_count = 0
+    for epoch in range(3):
         print("Epoch {}".format(epoch))
-        t_loss = train(train_loader, model, criterion, optimizer, epoch, writer)
+        t_loss = train(train_loader, model, criterion, optimizer, epoch)
         # training_loss.append(t_loss)
-        writer.add_scalar(tag="Training/Mean_loss", scalar_value = t_loss, global_step = epoch)
-        v_loss, v_acc = validate(val_loader, model, criterion, epoch, writer)
+        writer.add_scalar(tag="Training/Mean_loss", scalar_value = t_loss, global_step = global_step)
+        v_loss, v_acc = validate(val_loader, model, criterion, epoch)
         # val_loss.append(v_loss)
         # val_acc.append(v_acc)
-        writer.add_scalar(tag="Validation/Mean_Loss", scalar_value = v_loss, global_step = epoch)
-        writer.add_scalar(tag="Validation/Mean_Accuracy", scalar_value = v_acc, global_step = epoch)
+        writer.add_scalar(tag="Validation/Mean_Loss", scalar_value = v_loss, global_step = global_step)
+        writer.add_scalar(tag="Validation/Mean_Accuracy", scalar_value = v_acc, global_step = global_step)
         # save model
         if v_loss < best_val_loss:
             best_val_loss = v_loss
-            torch.save(model, args.model_folder)
+            torch.save(model, os.path.join(args.model_folder,"model_{}_{}.pth".format(best_val_loss, model_count)))
+            model_count += 1
             # raise NotImplementedError("TODO: save model if a new best validation error was reached")
+        global_step += 1
 
 
 # train one epoch over the whole training dataset. You can change the method's signature.
-def train(loader, model, criterion, optimizer, epoch, writer):
-    # raise NotImplementedError("TODO: training routine")
+def train(loader, model, criterion, optimizer, epoch):
     running_loss = 0.0
     model.train()
     for i, data in enumerate(loader, 0):
@@ -180,8 +184,7 @@ def train(loader, model, criterion, optimizer, epoch, writer):
 
 
 # validation function. you can change the method's signature.
-def validate(loader, model, criterion, epoch, writer):
-    # raise NotImplementedError("TODO: validation routine")
+def validate(loader, model, criterion, epoch):
     running_loss = 0.0
     acc = []
     model.eval()
