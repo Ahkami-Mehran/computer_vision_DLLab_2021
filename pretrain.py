@@ -8,6 +8,7 @@ import torchvision
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+from torch.utils.tensorboard import SummaryWriter
 
 # import torchvision.transforms as transforms
 
@@ -15,7 +16,16 @@ import torch.optim as optim
 from pprint import pprint
 from data.pretraining import DataReaderPlainImg, custom_collate
 from data.transforms import get_transforms_pretraining
-from utils import check_dir, accuracy, get_logger
+from utils import (
+    check_dir,
+    accuracy,
+    get_logger,
+    mIoU,
+    instance_mIoU,
+    set_random_seed,
+    save_in_log,
+)
+from utils.weights import load_from_weights
 from models.pretraining_backbone import ResNet18Backbone
 
 global_step = 0
@@ -60,12 +70,13 @@ def parse_arguments():
 def main(args):
     # Logging to the file and stdout
     logger = get_logger(args.output_folder, args.exp_name)
+    writer = SummaryWriter('results/pretrain/tensorboard/lr0.005_bs8_size256_')
 
     # build model and load weights
     model = ResNet18Backbone(pretrained=False).to(device)
-    saved_config = torch.load(args.weights_init, map_location=device)
-    model.load_state_dict(saved_config["model"])
-
+    # saved_config = torch.load(args.weights_init, map_location=device)
+    # model.load_state_dict(saved_config["model"])
+    model = load_from_weights(model, args.weights_init, logger=logger)
     # load dataset
     data_root = args.data_folder
     train_transform, val_transform = get_transforms_pretraining(args)
@@ -116,18 +127,28 @@ def main(args):
 
     best_val_loss = np.inf
     # Train-validate for one epoch. You don't have to run it for 100 epochs, preferably until it starts overfitting.
+    # training_loss = []
+    # val_loss = []
+    # val_acc = []
     for epoch in range(100):
         print("Epoch {}".format(epoch))
-        train(train_loader, model, criterion, optimizer, epoch)
-        # val_loss, val_acc = validate(val_loader, model, criterion)
-
+        t_loss = train(train_loader, model, criterion, optimizer, epoch, writer)
+        # training_loss.append(t_loss)
+        writer.add_scalar(tag="Training/Mean_loss", scalar_value = t_loss, global_step = epoch)
+        v_loss, v_acc = validate(val_loader, model, criterion, epoch, writer)
+        # val_loss.append(v_loss)
+        # val_acc.append(v_acc)
+        writer.add_scalar(tag="Validation/Mean_Loss", scalar_value = v_loss, global_step = epoch)
+        writer.add_scalar(tag="Validation/Mean_Accuracy", scalar_value = v_acc, global_step = epoch)
         # save model
-        # if val_loss < best_val_loss:
-        #     raise NotImplementedError("TODO: save model if a new best validation error was reached")
+        if v_loss < best_val_loss:
+            best_val_loss = v_loss
+            torch.save(model, args.model_folder)
+            # raise NotImplementedError("TODO: save model if a new best validation error was reached")
 
 
 # train one epoch over the whole training dataset. You can change the method's signature.
-def train(loader, model, criterion, optimizer, epoch):
+def train(loader, model, criterion, optimizer, epoch, writer):
     # raise NotImplementedError("TODO: training routine")
     running_loss = 0.0
     model.train()
@@ -142,15 +163,45 @@ def train(loader, model, criterion, optimizer, epoch):
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
+        # if i % 100 == 99:
         if i % 2 == 0:
-            print("[%5d] loss: %.3f" % (i + 1, running_loss / 2000))
-            running_loss = 0.0
+            print(
+                "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
+                % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
+            )
+            # return the running_loss for further evaluations
+    return running_loss / len(loader)
 
 
 # validation function. you can change the method's signature.
-def validate(loader, model, criterion):
-    raise NotImplementedError("TODO: validation routine")
+def validate(loader, model, criterion, epoch, writer):
+    # raise NotImplementedError("TODO: validation routine")
+    running_loss = 0.0
+    acc = []
+    model.eval()
+    for i, data in enumerate(loader, 0):
+        inputs, labels = data
+        inputs, labels = inputs.to(device), labels.to(device)
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        acc.append(accuracy(outputs, labels))
+        running_loss += loss.item()
+        if i % 2 == 0:
+            print(
+                "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , accuracy: %.3f"
+                % (
+                    epoch + 1,
+                    i + 1,
+                    len(loader),
+                    running_loss / len(loader.dataset),
+                    np.mean(acc),
+                )
+            )
+            
+
+            # return the running_loss for further evaluations
     # return mean_val_loss, mean_val_accuracy
+    return running_loss / (len(loader)), np.mean(acc)
 
 
 if __name__ == "__main__":

@@ -2,3 +2,11 @@ crops
 COCO_mini5class_medium
 pretrain_weights_init.pth
 binary_segmentation.pth
+
+data/__pycache__
+utils/__pycache__
+models/__pycache__
+results
+
+unlabelled_dataset.zip
+
