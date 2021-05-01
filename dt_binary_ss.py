@@ -2,6 +2,11 @@ import os
 import pprint
 import random
 import sys
+from pprint import pprint
+from utils.weights import load_from_weights
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
 
 sys.path.insert(0, os.getcwd())
 import numpy as np
@@ -17,6 +22,7 @@ from data.segmentation import DataReaderBinarySegmentation
 set_random_seed(0)
 global_step = 0
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -34,7 +40,7 @@ def parse_arguments():
     )
     args = parser.parse_args()
 
-    hparam_keys = ["lr", "bs", "loss"]
+    hparam_keys = ["lr", "bs", "size"]
     args.exp_name = "_".join(["{}{}".format(k, getattr(args, k)) for k in hparam_keys])
 
     args.exp_name += "_{}".format(args.exp_suffix)
@@ -54,9 +60,10 @@ def main(args):
     img_size = (args.size, args.size)
 
     # model
-    pretrained_model = None
-    raise NotImplementedError("TODO: build model and load pretrained weights")
-    model = Segmentator(2, pretrained_model.features, img_size).cuda()
+    pretrained_model = ResNet18Backbone(pretrained=False).to(device)
+    pretrained_model = load_from_weights(pretrained_model, args.weights_init, logger=logger)
+    # raise NotImplementedError("TODO: build model and load pretrained weights")
+    model = Segmentator(2, pretrained_model.features, img_size).to(device)
 
     # dataset
     (
@@ -97,10 +104,11 @@ def main(args):
     )
 
     # TODO: loss
-    criterion = None
+    criterion = nn.NLLLoss() # https://discuss.pytorch.org/t/loss-function-for-segmentation-models/32129
     # TODO: SGD optimizer (see pretraining)
-    optimizer = None
-    raise NotImplementedError("TODO: loss function and SGD optimizer")
+    optimizer = torch.optim.SGD(
+        model.parameters(), lr=args.lr, momentum=0.9, weight_decay=1e-4
+    )
 
     expdata = "  \n".join(["{} = {}".format(k, v) for k, v in vars(args).items()])
     logger.info(expdata)
@@ -111,14 +119,42 @@ def main(args):
     best_val_miou = 0.0
     for epoch in range(100):
         logger.info("Epoch {}".format(epoch))
-        train(train_loader, model, criterion, optimizer, logger)
-        val_results = validate(val_loader, model, criterion, logger, epoch)
+        train(train_loader, model, criterion, optimizer, logger, epoch)
+        # val_results = validate(val_loader, model, criterion, logger, epoch)
 
         # TODO save model
 
 
-def train(loader, model, criterion, optimizer, logger):
-    raise NotImplementedError("TODO: training routine")
+def train(loader, model, criterion, optimizer, logger, epoch):
+    # raise NotImplementedError("TODO: training routine")
+    running_loss = 0.0
+    model.train()
+    for i, data in enumerate(loader, 0):
+        # len(loader) gives the number of the bataches
+        # len(loader.dataset) gives the number of datapoints in a batch
+        inputs, labels = data
+        inputs, labels = inputs.to(device), labels.to(device)
+        print(inputs.shape)
+        print(labels.shape)
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(F.log_softmax(output,1), labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+        if device == 'cpu':
+            if i % 2 == 0:
+                print(
+                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
+                    % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
+                )
+        else:
+            if i % 100 == 99:
+                print(
+                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
+                    % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
+                )
+    # return running_loss / len(loader)
 
 
 def validate(loader, model, criterion, logger, epoch=0):
