@@ -1,24 +1,23 @@
 import os
-import pprint
 import random
 import sys
-from pprint import pprint
-from utils.weights import load_from_weights
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-
-sys.path.insert(0, os.getcwd())
+import time
 import numpy as np
 import argparse
 import torch
-import time
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from pprint import pprint
+
+from utils.weights import load_from_weights
 from utils import check_dir, set_random_seed, accuracy, mIoU, get_logger
 from models.second_segmentation import Segmentator
 from data.transforms import get_transforms_binary_segmentation
 from models.pretraining_backbone import ResNet18Backbone
 from data.segmentation import DataReaderBinarySegmentation
 
+sys.path.insert(0, os.getcwd())
 set_random_seed(0)
 global_step = 0
 
@@ -138,7 +137,7 @@ def train(loader, model, criterion, optimizer, logger, epoch):
         print(labels.shape)
         optimizer.zero_grad()
         outputs = model(inputs)
-        loss = criterion(F.log_softmax(output,1), labels)
+        loss = criterion(F.log_softmax(outputs,1), labels)
         loss.backward()
         optimizer.step()
         running_loss += loss.item()

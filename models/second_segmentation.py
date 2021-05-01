@@ -4,7 +4,7 @@ from torchvision.models._utils import IntermediateLayerGetter
 
 try:
     from deeplab_decoder import Decoder
-except ModuleNotFoundError:
+except ImportError:
     from .deeplab_decoder import Decoder
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
