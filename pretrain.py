@@ -205,7 +205,7 @@ def validate(loader, model, criterion, epoch, logger):
         inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         outputs = model(inputs)
         loss = criterion(outputs, labels)
-        acc.append(accuracy(outputs, labels).item())
+        acc.append(accuracy(outputs, labels)[0].item())
         running_loss += loss.item()
         if DEVICE.type == 'cpu':
             if i % 2 == 0:
