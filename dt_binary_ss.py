@@ -137,7 +137,7 @@ def train(loader, model, criterion, optimizer, logger, epoch):
         print(labels.shape)
         optimizer.zero_grad()
         outputs = model(inputs)
-        loss = criterion(F.log_softmax(outputs,1), labels)
+        loss = criterion(F.log_softmax(outputs,torch.LongTensor(1)), labels)
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
