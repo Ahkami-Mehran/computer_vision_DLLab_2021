@@ -95,7 +95,7 @@ def main(args):
     if DEVICE.type == 'cpu':
         train_data = torch.utils.data.Subset(train_data, np.arange(50)) # TODO: REMOVE
         val_data = torch.utils.data.Subset(val_data, np.arange(30)) # TODO: REMOVE
-    elif TRIAL == True:
+    elif TRAIL == True:
         train_data = torch.utils.data.Subset(train_data, np.arange(2000)) # TODO: REMOVE
         val_data = torch.utils.data.Subset(val_data, np.arange(500)) # TODO: REMOVE
 
