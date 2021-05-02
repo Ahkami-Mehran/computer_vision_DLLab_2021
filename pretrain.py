@@ -206,7 +206,6 @@ def validate(loader, model, criterion, epoch, logger):
         outputs = model(inputs)
         loss = criterion(outputs, labels)
         acc.append(accuracy(outputs, labels))
-        print(acc)
         running_loss += loss.item()
         if DEVICE.type == 'cpu':
             if i % 2 == 0:
@@ -217,7 +216,7 @@ def validate(loader, model, criterion, epoch, logger):
                         i + 1,
                         len(loader),
                         running_loss / len(loader.dataset),
-                        torch.mean(acc),
+                        torch.mean(torch.stach(acc)),
                     )
                 )
         else:
@@ -229,11 +228,11 @@ def validate(loader, model, criterion, epoch, logger):
                         i + 1,
                         len(loader),
                         running_loss / len(loader.dataset),
-                        torch.mean(acc),
+                        torch.mean(torch.stach(acc)),
                     )
                 )
     # return mean_val_loss, mean_val_accuracy
-    return running_loss / (len(loader)), torch.mean(acc)
+    return running_loss / (len(loader)), torch.mean(torch.stach(acc))
 
 
 if __name__ == "__main__":
