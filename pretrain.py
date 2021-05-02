@@ -95,6 +95,9 @@ def main(args):
     if DEVICE.type == 'cpu':
         train_data = torch.utils.data.Subset(train_data, np.arange(50)) # TODO: REMOVE
         val_data = torch.utils.data.Subset(val_data, np.arange(30)) # TODO: REMOVE
+    elif TRIAL == True:
+        train_data = torch.utils.data.Subset(train_data, np.arange(2000)) # TODO: REMOVE
+        val_data = torch.utils.data.Subset(val_data, np.arange(500)) # TODO: REMOVE
 
     train_loader = torch.utils.data.DataLoader(
         train_data,
@@ -183,7 +186,7 @@ def train(loader, model, criterion, optimizer, epoch, logger):
                     % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
                 )
         else:
-            if i % 100 == 99:
+            if i % 50 == 49:
                 logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
                     % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
@@ -203,6 +206,7 @@ def validate(loader, model, criterion, epoch, logger):
         outputs = model(inputs)
         loss = criterion(outputs, labels)
         acc.append(accuracy(outputs, labels))
+        print(acc)
         running_loss += loss.item()
         if DEVICE.type == 'cpu':
             if i % 2 == 0:
