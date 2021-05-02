@@ -32,7 +32,7 @@ from models.pretraining_backbone import ResNet18Backbone
 global_step = 0
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+TRAIL = True
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
