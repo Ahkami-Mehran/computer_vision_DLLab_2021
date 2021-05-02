@@ -31,7 +31,7 @@ from models.pretraining_backbone import ResNet18Backbone
 
 global_step = 0
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 def parse_arguments():
@@ -70,14 +70,17 @@ def parse_arguments():
 
 def main(args):
     # Logging to the file and stdout
-    logger = get_logger(args.output_folder, args.exp_name)
-    writer = SummaryWriter('results/pretrain/tensorboard/lr0.005_bs8_size256_')
+    logger = get_logger(args.logs_folder, args.exp_name)
+    writer = SummaryWriter(os.path.join(args.output_folder, 'tensorboard'))
 
     # build model and load weights
-    model = ResNet18Backbone(pretrained=False).to(device)
-    # saved_config = torch.load(args.weights_init, map_location=device)
+    model = ResNet18Backbone(pretrained=False).to(DEVICE)
+
+    # load model
+    # saved_config = torch.load(args.weights_init, map_location=DEVICE)
     # model.load_state_dict(saved_config["model"])
     model = load_from_weights(model, args.weights_init, logger=logger)
+
     # load dataset
     data_root = args.data_folder
     train_transform, val_transform = get_transforms_pretraining(args)
@@ -87,6 +90,12 @@ def main(args):
     val_data = DataReaderPlainImg(
         os.path.join(data_root, str(args.size), "val"), transform=val_transform
     )
+
+    # subset of data
+    if DEVICE.type == 'cpu':
+        train_data = torch.utils.data.Subset(train_data, np.arange(50)) # TODO: REMOVE
+        val_data = torch.utils.data.Subset(val_data, np.arange(30)) # TODO: REMOVE
+
     train_loader = torch.utils.data.DataLoader(
         train_data,
         batch_size=args.bs,
@@ -107,17 +116,19 @@ def main(args):
     )
 
     # Visualize the sample batch of images with the labels
-    dataiter = iter(train_loader)
-    images, labels = dataiter.next()
-    print(images[1].shape)
-    temp_img = torchvision.utils.make_grid(images[:32,:,:,:])
-    temp_img = temp_img / 2 + 0.5     # unnormalize
-    npimg = temp_img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show()
+    # dataiter = iter(train_loader)
+    # images, labels = dataiter.next()
+    # logger.info(images[1].shape)
+    # temp_img = torchvision.utils.make_grid(images[:32,:,:,:])
+    # temp_img = temp_img / 2 + 0.5     # unnormalize
+    # npimg = temp_img.numpy()
+    # plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    # plt.show()
 
     # TODO: loss function
     criterion = nn.CrossEntropyLoss()
+
+    # Optimizer
     optimizer = torch.optim.SGD(
         model.parameters(), lr=args.lr, momentum=0.9, weight_decay=1e-4
     )
@@ -129,53 +140,51 @@ def main(args):
 
     best_val_loss = np.inf
     # Train-validate for one epoch. You don't have to run it for 100 epochs, preferably until it starts overfitting.
-    # training_loss = []
-    # val_loss = []
-    # val_acc = []
     model_count = 0
-    for epoch in range(3):
-        print("Epoch {}".format(epoch))
-        t_loss = train(train_loader, model, criterion, optimizer, epoch)
+    for epoch in range(100):
+        logger.info("Epoch {}".format(epoch))
+        t_loss = train(train_loader, model, criterion, optimizer, epoch, logger)
         # training_loss.append(t_loss)
-        writer.add_scalar(tag="Training/Mean_loss", scalar_value = t_loss, global_step = global_step)
-        v_loss, v_acc = validate(val_loader, model, criterion, epoch)
+        writer.add_scalar(tag="Training/Mean_loss", scalar_value = t_loss, global_step = epoch)
+        v_loss, v_acc = validate(val_loader, model, criterion, epoch, logger)
         # val_loss.append(v_loss)
         # val_acc.append(v_acc)
-        writer.add_scalar(tag="Validation/Mean_Loss", scalar_value = v_loss, global_step = global_step)
-        writer.add_scalar(tag="Validation/Mean_Accuracy", scalar_value = v_acc, global_step = global_step)
+        writer.add_scalar(tag="Validation/Mean_Loss", scalar_value = v_loss, global_step = epoch)
+        writer.add_scalar(tag="Validation/Mean_Accuracy", scalar_value = v_acc, global_step = epoch)
         # save model
         if v_loss < best_val_loss:
             best_val_loss = v_loss
-            torch.save(model, os.path.join(args.model_folder,"model_{}_{}.pth".format(best_val_loss, model_count)))
-            model_count += 1
+            # TODO: save only top model. due to disk space
+            torch.save(model, os.path.join(args.model_folder,"model.pth"))
+            logger.info("save model with on epoch{} and validation loss {}".format(epoch, best_val_loss))
             # raise NotImplementedError("TODO: save model if a new best validation error was reached")
-        global_step += 1
+        global_step = epoch
 
 
 # train one epoch over the whole training dataset. You can change the method's signature.
-def train(loader, model, criterion, optimizer, epoch):
+def train(loader, model, criterion, optimizer, epoch, logger):
     running_loss = 0.0
     model.train()
     for i, data in enumerate(loader, 0):
         # len(loader) gives the number of the bataches
         # len(loader.dataset) gives the number of datapoints in a batch
         inputs, labels = data
-        inputs, labels = inputs.to(device), labels.to(device)
+        inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
-        if device == 'cpu':
+        if DEVICE.type == 'cpu':
             if i % 2 == 0:
-                print(
+                logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
                     % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
                 )
         else:
             if i % 100 == 99:
-                print(
+                logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
                     % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
                 )
@@ -184,20 +193,20 @@ def train(loader, model, criterion, optimizer, epoch):
 
 
 # validation function. you can change the method's signature.
-def validate(loader, model, criterion, epoch):
+def validate(loader, model, criterion, epoch, logger):
     running_loss = 0.0
     acc = []
     model.eval()
     for i, data in enumerate(loader, 0):
         inputs, labels = data
-        inputs, labels = inputs.to(device), labels.to(device)
+        inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         outputs = model(inputs)
         loss = criterion(outputs, labels)
         acc.append(accuracy(outputs, labels))
         running_loss += loss.item()
-        if device == 'cpu':
+        if DEVICE.type == 'cpu':
             if i % 2 == 0:
-                print(
+                logger.info(
                     "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , accuracy: %.3f"
                     % (
                         epoch + 1,
@@ -209,7 +218,7 @@ def validate(loader, model, criterion, epoch):
                 )
         else:
             if i % 10 == 9:
-                print(
+                logger.info(
                     "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , accuracy: %.3f"
                     % (
                         epoch + 1,
