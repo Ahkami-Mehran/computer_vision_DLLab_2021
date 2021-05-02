@@ -4,22 +4,13 @@ import argparse
 import torch
 from pprint import pprint
 from torchvision.transforms import *
+from torchvision.utils import save_image
+
 from torch.utils.tensorboard import SummaryWriter
 from models.pretraining_backbone import ResNet18Backbone
 from data.pretraining import DataReaderPlainImg, custom_collate
-from utils import (
-    check_dir,
-    accuracy,
-    get_logger,
-    mIoU,
-    instance_mIoU,
-    set_random_seed,
-    save_in_log,
-)
-import os
+
 import numpy as np
-import argparse
-import torch
 import matplotlib.pyplot as plt
 import torchvision
 import datetime
@@ -29,10 +20,6 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 
-# import torchvision.transforms as transforms
-
-
-from pprint import pprint
 from data.pretraining import DataReaderPlainImg, custom_collate
 from data.transforms import get_transforms_pretraining
 from utils import (
@@ -46,8 +33,8 @@ from utils import (
 )
 from utils.weights import load_from_weights
 from models.pretraining_backbone import ResNet18Backbone
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -71,13 +58,12 @@ def parse_arguments():
 
 
 def main(args):
-    # model'
     # Logging to the file and stdout
-    logger = get_logger(args.output_folder, "NN")
-    writer = SummaryWriter('results/NN/tensorboard/lr0.005_bs8_size256_')
+    logger = get_logger(args.logs_folder, "nearest_neighbors")
 
     # build model and load weights
-    model = torch.load(args.weights_init)
+    model = ResNet18Backbone(pretrained=False).to(device)
+    model = load_from_weights(model, args.weights_init)
 
     # load dataset
     data_root = "./crops/images"
@@ -85,6 +71,7 @@ def main(args):
     val_transform = Compose(
         [Resize(args.size), CenterCrop((args.size, args.size)), ToTensor()]
     )
+
     val_data = DataReaderPlainImg(
         os.path.join(data_root, str(args.size), "val"), transform=val_transform
     )
@@ -95,30 +82,37 @@ def main(args):
         num_workers=2,
         pin_memory=True,
         drop_last=True,
-        # collate_fn=custom_collate,
     )
-    print(2)
     # choose/sample which images you want to compute the NNs of.
     # You can try different ones and pick the most interesting ones.
     query_indices = [10]
     nns = []
     # for idx, img in enumerate(val_loader):
     k = 5
-    for item in enumerate(val_loader):
-        idx, img = item[0], item[1]
+    for idx, img in enumerate(val_loader):
+        # idx, img = item[0], item[1]
+
         if idx not in query_indices:
             continue
         print("Computing NNs for sample {}".format(idx))
         closest_idx, closest_dist = find_nn(model, img, val_loader, k)
-        print(closest_idx)
-        print(closest_dist)
-        print(3)
+        nn_img_path = os.path.join(args.output_folder, "nn_img", "image_{}".format(query_indices)) 
+        check_dir(nn_img_path)
+        query_img = val_loader.dataset[query_indices]
+        print(query_img.shape)
+        save_image(query_img, os.path.join(nn_img_path, "image_orig.png"))
+        for i, nn_img_idx in enumerate(closest_idx):
+            nn_img = val_loader[nn_img_idx]
+            save_image(nn_img, os.path.join(nn_img_path, "num_{}_image_{}.png".format(i, nn_img_idx)))
         # raise NotImplementedError(
         #     "TODO: retrieve the original NN images, save them and log the results."
+        # 
         # )
-        nns = img[closest_idx[0].type(torch.LongTensor)]
-        print(nns[0].shape)
-        print(nns)
+        # nns = val_loader.dataset[closest_idx.item().type(torch.LongTensor)]
+        # nns = val_loader.dataset[closest_idx.item()]
+        # print(nns.shape)
+        # torchvision.utils.save_image() # TODO: save images in another folder.
+        # print(nns)
         # temp_img = torchvision.utils.make_grid(images[:k,:,:,:])
         # temp_img = temp_img / 2 + 0.5     # unnormalize
         # npimg = temp_img.numpy()
@@ -141,25 +135,18 @@ def find_nn(model, query_img, loader, k):
     closest_idx = []
     closest_dist = []
     model.eval()
-    for item in enumerate(loader):
-        idx, inputs = item[0], item[1]
+    for idx, inputs in enumerate(loader):
+        if torch.equal(inputs, query_img):
+            continue
+        # idx, inputs = item[0], item[1]
         inputs = inputs.to(device)
         query_features = model.features(query_img)["out"].flatten()
         data_features = model.features(inputs)["out"].flatten()
-        l2_distance = torch.dist(data_features, query_features)
+        l2_distance = torch.dist(data_features, query_features).item()
         closest_dist.append(l2_distance)
         # closest_idx.append(idx)
     closest_idx, closest_dist = torch.sort(torch.cat([t.view(-1) for t in closest_dist]))
     return closest_idx[0:k], closest_dist[0:k]
-
-def knn(ref, query, k):
-    ref_c =torch.stack([ref] * query.shape[-1], dim=0).permute(0, 2, 1).reshape(-1, 2).transpose(0, 1)
-    query_c = torch.repeat_interleave(query, repeats=ref.shape[-1], dim=1)
-    delta = query_c - ref_c
-    distances = torch.sqrt(torch.pow(delta, 2).sum(dim=0))
-    distances = distances.view(query.shape[-1], ref.shape[-1])
-    sorted_dist, indices = torch.sort(distances, dim=-1)
-    return sorted_dist[:, :k], indices[:, :k]
 
 if __name__ == "__main__":
     args = parse_arguments()
