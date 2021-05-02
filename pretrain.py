@@ -217,7 +217,7 @@ def validate(loader, model, criterion, epoch, logger):
                         i + 1,
                         len(loader),
                         running_loss / len(loader.dataset),
-                        np.mean(acc),
+                        torch.mean(acc),
                     )
                 )
         else:
@@ -229,11 +229,11 @@ def validate(loader, model, criterion, epoch, logger):
                         i + 1,
                         len(loader),
                         running_loss / len(loader.dataset),
-                        np.mean(acc),
+                        torch.mean(acc),
                     )
                 )
     # return mean_val_loss, mean_val_accuracy
-    return running_loss / (len(loader)), np.mean(acc)
+    return running_loss / (len(loader)), torch.mean(acc)
 
 
 if __name__ == "__main__":
