@@ -102,7 +102,7 @@ def main(args):
             continue
         logger.info("Computing NNs for sample {}".format(idx))
         closest_idx, closest_dist = find_nn(model, img, val_loader, k)
-        nn_img_path = os.path.join(args.output_folder, "nn_img", "image_{}".format(query_indices)) 
+        nn_img_path = os.path.join(args.output_folder, "nn_img", "image_{}".format(query_indices[0])) 
         check_dir(nn_img_path)
         query_img = val_loader.dataset[query_indices[0]]
         logger.info(query_img.shape)
