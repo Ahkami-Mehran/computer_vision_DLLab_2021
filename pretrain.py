@@ -77,9 +77,9 @@ def main(args):
     model = ResNet18Backbone(pretrained=False).to(DEVICE)
 
     # load model
-    # saved_config = torch.load(args.weights_init, map_location=DEVICE)
-    # model.load_state_dict(saved_config["model"])
-    model = load_from_weights(model, args.weights_init, logger=logger)
+    saved_config = torch.load(args.weights_init, map_location=DEVICE)
+    model.load_state_dict(saved_config["model"])
+    # model = load_from_weights(model, args.weights_init, logger=logger)
 
     # load dataset
     data_root = args.data_folder
