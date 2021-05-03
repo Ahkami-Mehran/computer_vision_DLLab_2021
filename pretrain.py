@@ -183,13 +183,13 @@ def train(loader, model, criterion, optimizer, epoch, logger):
             if i % 2 == 0:
                 logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
-                    % (epoch + 1, i + 1, len(loader), running_loss / (i + 1)
+                    % (epoch + 1, i + 1, len(loader), running_loss / (i + 1))
                 )
         else:
             if i % 50 == 49:
                 logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
-                    % (epoch + 1, i + 1, len(loader), running_loss / (i + 1)
+                    % (epoch + 1, i + 1, len(loader), running_loss / (i + 1))
                 )
     # return the running_loss for further evaluations
     return running_loss / len(loader)
