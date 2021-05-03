@@ -36,6 +36,7 @@ from models.pretraining_backbone import ResNet18Backbone
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("--weights-init", type=str, default="")
@@ -49,7 +50,9 @@ def parse_arguments():
         os.path.join(
             args.output_root,
             "nearest_neighbors",
-            args.weights_init.replace("/", "_").replace("models", "").replace(".pth", ""),
+            args.weights_init.replace("/", "_")
+            .replace("models", "")
+            .replace(".pth", ""),
         )
     )
     args.logs_folder = check_dir(os.path.join(args.output_folder, "logs"))
@@ -63,7 +66,7 @@ def main(args):
 
     # build model and load weights
     model = ResNet18Backbone(pretrained=False).to(device)
-    
+
     # load model
     saved_config = torch.load(args.weights_init, map_location=device)
     if type(saved_config) == dict:
@@ -102,19 +105,32 @@ def main(args):
             continue
         logger.info("Computing NNs for sample {}".format(idx))
         closest_idx, closest_dist = find_nn(model, img, val_loader, k)
-        nn_img_path = os.path.join(args.output_folder, "nn_img", "image_{}".format(query_indices[0])) 
+        nn_img_path = os.path.join(
+            args.output_folder, "nn_img", "image_{}".format(query_indices[0])
+        )
         check_dir(nn_img_path)
         query_img = val_loader.dataset[query_indices[0]]
         logger.info(query_img.shape)
         save_image(query_img, os.path.join(nn_img_path, "image_orig.png"))
-        logger.info("The list of k={} top closest pictures to id={} are {}".format(k, query_indices[0], closest_idx))
-        logger.info("The list of k={} top closest distances to id={} are {}".format(k, query_indices[0], closest_dist))
+        logger.info(
+            "The list of k={} top closest pictures to id={} are {}".format(
+                k, query_indices[0], closest_idx
+            )
+        )
+        logger.info(
+            "The list of k={} top closest distances to id={} are {}".format(
+                k, query_indices[0], closest_dist
+            )
+        )
         for i, nn_img_idx in enumerate(closest_idx):
             nn_img = val_loader.dataset[nn_img_idx]
-            save_image(nn_img, os.path.join(nn_img_path, "num_{}_image_{}.png".format(i, nn_img_idx)))
+            save_image(
+                nn_img,
+                os.path.join(nn_img_path, "num_{}_image_{}.png".format(i, nn_img_idx)),
+            )
         # raise NotImplementedError(
         #     "TODO: retrieve the original NN images, save them and log the results."
-        # 
+        #
         # )
         # nns = val_loader.dataset[closest_idx.item().type(torch.LongTensor)]
         # nns = val_loader.dataset[closest_idx.item()]
@@ -153,10 +169,11 @@ def find_nn(model, query_img, loader, k):
         l2_distance = torch.dist(data_features, query_features).item()
         closest_dist.append(l2_distance)
         # closest_idx.append(idx)
-    
+
     closest_dist_sorted = np.sort(closest_dist)
     closest_idx_sorted = np.argsort(closest_dist)
     return closest_idx_sorted[0:k], closest_dist_sorted[0:k]
+
 
 if __name__ == "__main__":
     args = parse_arguments()

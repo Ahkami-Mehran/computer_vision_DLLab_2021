@@ -27,6 +27,7 @@ global_step = 0
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 TRAIL = False
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("data_folder", type=str, help="folder containing the data")
@@ -60,7 +61,7 @@ def parse_arguments():
 def main(args):
     # Logging to the file and stdout
     logger = get_logger(args.logs_folder, args.exp_name)
-    writer = SummaryWriter(os.path.join(args.output_folder, 'tensorboard'))
+    writer = SummaryWriter(os.path.join(args.output_folder, "tensorboard"))
     img_size = (args.size, args.size)
 
     # model
@@ -93,12 +94,14 @@ def main(args):
         target_transform=val_target_trans,
     )
     # subset of data
-    if DEVICE.type == 'cpu':
-        train_data = torch.utils.data.Subset(train_data, np.arange(50)) # TODO: REMOVE
-        val_data = torch.utils.data.Subset(val_data, np.arange(30)) # TODO: REMOVE
+    if DEVICE.type == "cpu":
+        train_data = torch.utils.data.Subset(train_data, np.arange(50))  # TODO: REMOVE
+        val_data = torch.utils.data.Subset(val_data, np.arange(30))  # TODO: REMOVE
     elif TRAIL == True:
-        train_data = torch.utils.data.Subset(train_data, np.arange(2000)) # TODO: REMOVE
-        val_data = torch.utils.data.Subset(val_data, np.arange(500)) # TODO: REMOVE
+        train_data = torch.utils.data.Subset(
+            train_data, np.arange(2000)
+        )  # TODO: REMOVE
+        val_data = torch.utils.data.Subset(val_data, np.arange(500))  # TODO: REMOVE
 
     logger.info("Dataset size: {} samples".format(len(train_data)))
     train_loader = torch.utils.data.DataLoader(
@@ -138,17 +141,27 @@ def main(args):
         logger.info("Epoch {}".format(epoch))
         # Train
         t_loss = train(train_loader, model, criterion, optimizer, logger, epoch)
-        writer.add_scalar(tag="Training/Mean_loss", scalar_value = t_loss, global_step = epoch)
+        writer.add_scalar(
+            tag="Training/Mean_loss", scalar_value=t_loss, global_step=epoch
+        )
         # Validate
         v_loss, v_mIoU = validate(val_loader, model, criterion, logger, epoch)
-        writer.add_scalar(tag="Validation/Mean_Loss", scalar_value = v_loss, global_step = epoch)
-        writer.add_scalar(tag="Validation/Mean_IoU", scalar_value = v_mIoU, global_step = epoch)
+        writer.add_scalar(
+            tag="Validation/Mean_Loss", scalar_value=v_loss, global_step=epoch
+        )
+        writer.add_scalar(
+            tag="Validation/Mean_IoU", scalar_value=v_mIoU, global_step=epoch
+        )
 
         # TODO save model
         if v_loss < best_val_loss:
             best_val_loss = v_loss
-            torch.save(model.state_dict(), os.path.join(args.model_folder,"model.pth"))
-            logger.info("save model with on epoch{} and validation loss {}".format(epoch, best_val_loss))
+            torch.save(model.state_dict(), os.path.join(args.model_folder, "model.pth"))
+            logger.info(
+                "save model with on epoch{} and validation loss {}".format(
+                    epoch, best_val_loss
+                )
+            )
         global_step = epoch
 
 
@@ -163,13 +176,17 @@ def train(loader, model, criterion, optimizer, logger, epoch):
         inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         optimizer.zero_grad()
         outputs = model(inputs)
-        labels = torch.where(labels > 0.0,torch.tensor(1., device=DEVICE), torch.tensor(0., device=DEVICE))
+        labels = torch.where(
+            labels > 0.0,
+            torch.tensor(1.0, device=DEVICE),
+            torch.tensor(0.0, device=DEVICE),
+        )
         labels = labels.squeeze(dim=1).type(torch.LongTensor).to(DEVICE)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
         loss_meter.add(loss.item())
-        if DEVICE.type == 'cpu':
+        if DEVICE.type == "cpu":
             if i % 2 == 0:
                 logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
@@ -193,13 +210,17 @@ def validate(loader, model, criterion, logger, epoch=0):
         inputs, labels = data
         inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         outputs = model(inputs)
-        labels = torch.where(labels > 0.0,torch.tensor(1., device=DEVICE), torch.tensor(0., device=DEVICE))
+        labels = torch.where(
+            labels > 0.0,
+            torch.tensor(1.0, device=DEVICE),
+            torch.tensor(0.0, device=DEVICE),
+        )
         labels = labels.squeeze(dim=1).type(torch.LongTensor).to(DEVICE)
         outputs = F.interpolate(outputs, size=labels.shape[1:3])
         loss = criterion(outputs, labels)
         iou_meter.add(mIoU(outputs, labels))
         loss_meter.add(loss.item())
-        if DEVICE.type == 'cpu':
+        if DEVICE.type == "cpu":
             if i % 2 == 0:
                 logger.info(
                     "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.3f"
