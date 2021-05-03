@@ -107,6 +107,8 @@ def main(args):
         query_img = val_loader.dataset[query_indices[0]]
         logger.info(query_img.shape)
         save_image(query_img, os.path.join(nn_img_path, "image_orig.png"))
+        logger.info("The list of k={} top closest pictures to id={} are {}".format(k, query_indices[0], closest_idx))
+        logger.info("The list of k={} top closest distances to id={} are {}".format(k, query_indices[0], closest_dist))
         for i, nn_img_idx in enumerate(closest_idx):
             nn_img = val_loader.dataset[nn_img_idx]
             save_image(nn_img, os.path.join(nn_img_path, "num_{}_image_{}.png".format(i, nn_img_idx)))
