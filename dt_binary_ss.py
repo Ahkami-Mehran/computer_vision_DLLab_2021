@@ -24,7 +24,7 @@ set_random_seed(0)
 global_step = 0
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-TRAIL = Falsegit
+TRAIL = False
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -201,11 +201,11 @@ def validate(loader, model, criterion, logger, epoch=0):
                         i + 1,
                         len(loader),
                         running_loss / len(loader.dataset),
-                        running_loss,
+                        running_mIoU,
                     )
                 )
         else:
-            if i % 10 == 9:
+            if i % 50 == 49:
                 logger.info(
                     "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.8f"
                     % (
@@ -213,11 +213,11 @@ def validate(loader, model, criterion, logger, epoch=0):
                         i + 1,
                         len(loader),
                         running_loss / len(loader.dataset),
-                        running_loss,
+                        running_mIoU,
                     )
                 )
     # in case of not matching dimentions, use F.interpolate to convert them
-    return running_loss / len(loader), running_loss
+    return running_loss / len(loader), running_mIoU
 
 
 def save_model(model, optimizer, args, epoch, val_loss, val_iou, logger, best=False):
