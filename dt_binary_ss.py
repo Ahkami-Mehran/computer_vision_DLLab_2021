@@ -11,17 +11,20 @@ import torch.optim as optim
 from pprint import pprint
 
 from utils.weights import load_from_weights
-from utils import check_dir, set_random_seed, accuracy, mIoU, get_logger
+from utils import check_dir, set_random_seed, accuracy, instance_mIoU, mIoU, get_logger
 from models.second_segmentation import Segmentator
 from data.transforms import get_transforms_binary_segmentation
 from models.pretraining_backbone import ResNet18Backbone
 from data.segmentation import DataReaderBinarySegmentation
+from torch.utils.tensorboard import SummaryWriter
+
 
 sys.path.insert(0, os.getcwd())
 set_random_seed(0)
 global_step = 0
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+TRAIL = Falsegit
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -55,15 +58,17 @@ def parse_arguments():
 
 def main(args):
     # Logging to the file and stdout
-    logger = get_logger(args.output_folder, args.exp_name)
+    logger = get_logger(args.logs_folder, args.exp_name)
+    writer = SummaryWriter(os.path.join(args.output_folder, 'tensorboard'))
     img_size = (args.size, args.size)
 
     # model
-    pretrained_model = ResNet18Backbone(pretrained=False).to(device)
+    pretrained_model = ResNet18Backbone(pretrained=False).to(DEVICE)
     pretrained_model = load_from_weights(pretrained_model, args.weights_init, logger=logger)
     # raise NotImplementedError("TODO: build model and load pretrained weights")
-    model = Segmentator(2, pretrained_model.features, img_size).to(device)
-
+    # model = Segmentator(2, pretrained_model.features, img_size).to(DEVICE)
+    # in case of BCEWtihLogistLOss I change the channel count to 1
+    model = Segmentator(1, pretrained_model.features, img_size).to(DEVICE)
     # dataset
     (
         train_trans,
@@ -84,7 +89,15 @@ def main(args):
         transform=val_trans,
         target_transform=val_target_trans,
     )
-    print("Dataset size: {} samples".format(len(train_data)))
+    # subset of data
+    if DEVICE.type == 'cpu':
+        train_data = torch.utils.data.Subset(train_data, np.arange(50)) # TODO: REMOVE
+        val_data = torch.utils.data.Subset(val_data, np.arange(30)) # TODO: REMOVE
+    elif TRAIL == True:
+        train_data = torch.utils.data.Subset(train_data, np.arange(2000)) # TODO: REMOVE
+        val_data = torch.utils.data.Subset(val_data, np.arange(500)) # TODO: REMOVE
+
+    logger.info("Dataset size: {} samples".format(len(train_data)))
     train_loader = torch.utils.data.DataLoader(
         train_data,
         batch_size=args.bs,
@@ -103,7 +116,8 @@ def main(args):
     )
 
     # TODO: loss
-    criterion = nn.NLLLoss() # https://discuss.pytorch.org/t/loss-function-for-segmentation-models/32129
+    # criterion = nn.NLLLoss() # https://discuss.pytorch.org/t/loss-function-for-segmentation-models/32129
+    criterion = nn.BCEWithLogitsLoss()
     # TODO: SGD optimizer (see pretraining)
     optimizer = torch.optim.SGD(
         model.parameters(), lr=args.lr, momentum=0.9, weight_decay=1e-4
@@ -118,10 +132,20 @@ def main(args):
     best_val_miou = 0.0
     for epoch in range(100):
         logger.info("Epoch {}".format(epoch))
-        train(train_loader, model, criterion, optimizer, logger, epoch)
-        # val_results = validate(val_loader, model, criterion, logger, epoch)
+        # Train
+        t_loss = train(train_loader, model, criterion, optimizer, logger, epoch)
+        writer.add_scalar(tag="Training/Mean_loss", scalar_value = t_loss, global_step = epoch)
+        # Validate
+        v_loss, v_mIoU = validate(val_loader, model, criterion, logger, epoch)
+        writer.add_scalar(tag="Validation/Mean_Loss", scalar_value = v_loss, global_step = epoch)
+        writer.add_scalar(tag="Validation/Mean_IoU", scalar_value = v_mIoU, global_step = epoch)
 
         # TODO save model
+        if v_loss < best_val_loss:
+            best_val_loss = v_loss
+            torch.save(model.state_dict(), os.path.join(args.model_folder,"model.pth"))
+            logger.info("save model with on epoch{} and validation loss {}".format(epoch, best_val_loss))
+        global_step = epoch
 
 
 def train(loader, model, criterion, optimizer, logger, epoch):
@@ -132,33 +156,68 @@ def train(loader, model, criterion, optimizer, logger, epoch):
         # len(loader) gives the number of the bataches
         # len(loader.dataset) gives the number of datapoints in a batch
         inputs, labels = data
-        inputs, labels = inputs.to(device), labels.to(device)
-        print(inputs.shape)
-        print(labels.shape)
+        inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         optimizer.zero_grad()
         outputs = model(inputs)
-        loss = criterion(F.log_softmax(outputs,F.LogSoftmaxFuncOptions(1)), labels)
+        loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
-        if device == 'cpu':
+        if DEVICE.type == 'cpu':
             if i % 2 == 0:
-                print(
+                logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
                     % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
                 )
         else:
             if i % 100 == 99:
-                print(
+                logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
                     % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
                 )
-    # return running_loss / len(loader)
+    return running_loss / len(loader)
 
 
 def validate(loader, model, criterion, logger, epoch=0):
-    raise NotImplementedError("TODO: validation routine")
-    # return mean_val_loss, mean_val_iou
+    # raise NotImplementedError("TODO: validation routine")
+    running_loss = 0.0
+    running_mIoU = 0
+    model.eval()
+    for i, data in enumerate(loader, 0):
+        inputs, labels = data
+        inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
+        outputs = model(inputs)
+        outputs = F.interpolate(outputs, size=labels.shape[2:4])
+        loss = criterion(outputs, labels)
+        running_mIoU += mIoU(outputs, labels).item()
+        logger.info(running_mIoU)
+        running_loss += loss.item()
+        if DEVICE.type == 'cpu':
+            if i % 2 == 0:
+                logger.info(
+                    "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.3f"
+                    % (
+                        epoch + 1,
+                        i + 1,
+                        len(loader),
+                        running_loss / len(loader.dataset),
+                        running_loss,
+                    )
+                )
+        else:
+            if i % 10 == 9:
+                logger.info(
+                    "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.8f"
+                    % (
+                        epoch + 1,
+                        i + 1,
+                        len(loader),
+                        running_loss / len(loader.dataset),
+                        running_loss,
+                    )
+                )
+    # in case of not matching dimentions, use F.interpolate to convert them
+    return running_loss / len(loader), running_loss
 
 
 def save_model(model, optimizer, args, epoch, val_loss, val_iou, logger, best=False):
