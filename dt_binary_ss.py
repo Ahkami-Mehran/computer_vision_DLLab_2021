@@ -164,7 +164,7 @@ def train(loader, model, criterion, optimizer, logger, epoch):
         optimizer.zero_grad()
         outputs = model(inputs)
         labels = torch.where(labels > 0.0,torch.tensor(1., device=DEVICE), torch.tensor(0., device=DEVICE))
-        labels = labels.squeeze(dim=1).type(torch.LongTensor)
+        labels = labels.squeeze(dim=1).type(torch.LongTensor).to(DEVICE)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
