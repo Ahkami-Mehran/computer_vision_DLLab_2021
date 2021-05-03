@@ -63,7 +63,13 @@ def main(args):
 
     # build model and load weights
     model = ResNet18Backbone(pretrained=False).to(device)
-    model = load_from_weights(model, args.weights_init)
+    
+    # load model
+    saved_config = torch.load(args.weights_init, map_location=device)
+    if type(saved_config) == dict:
+        model = load_from_weights(model, args.weights_init)
+    else:
+        model.load_state_dict(saved_config.state_dict())
 
     # load dataset
     data_root = "./crops/images"
@@ -94,12 +100,12 @@ def main(args):
 
         if idx not in query_indices:
             continue
-        print("Computing NNs for sample {}".format(idx))
+        logger.info("Computing NNs for sample {}".format(idx))
         closest_idx, closest_dist = find_nn(model, img, val_loader, k)
         nn_img_path = os.path.join(args.output_folder, "nn_img", "image_{}".format(query_indices)) 
         check_dir(nn_img_path)
         query_img = val_loader.dataset[query_indices]
-        print(query_img.shape)
+        logger.info(query_img.shape)
         save_image(query_img, os.path.join(nn_img_path, "image_orig.png"))
         for i, nn_img_idx in enumerate(closest_idx):
             nn_img = val_loader[nn_img_idx]
@@ -110,9 +116,9 @@ def main(args):
         # )
         # nns = val_loader.dataset[closest_idx.item().type(torch.LongTensor)]
         # nns = val_loader.dataset[closest_idx.item()]
-        # print(nns.shape)
+        # logger.info(nns.shape)
         # torchvision.utils.save_image() # TODO: save images in another folder.
-        # print(nns)
+        # logger.info(nns)
         # temp_img = torchvision.utils.make_grid(images[:k,:,:,:])
         # temp_img = temp_img / 2 + 0.5     # unnormalize
         # npimg = temp_img.numpy()

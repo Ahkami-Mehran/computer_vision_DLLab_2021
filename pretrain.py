@@ -158,7 +158,7 @@ def main(args):
         if v_loss < best_val_loss:
             best_val_loss = v_loss
             # TODO: save only top model. due to disk space
-            torch.save(model, os.path.join(args.model_folder,"model.pth"))
+            torch.save(model.state_dict(), os.path.join(args.model_folder,"model.pth"))
             logger.info("save model with on epoch{} and validation loss {}".format(epoch, best_val_loss))
             # raise NotImplementedError("TODO: save model if a new best validation error was reached")
         global_step = epoch
