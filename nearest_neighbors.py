@@ -49,7 +49,7 @@ def parse_arguments():
         os.path.join(
             args.output_root,
             "nearest_neighbors",
-            args.weights_init.replace("/", "_").replace("models", ""),
+            args.weights_init.replace("/", "_").replace("models", "").replace(".pth", ""),
         )
     )
     args.logs_folder = check_dir(os.path.join(args.output_folder, "logs"))
@@ -104,11 +104,11 @@ def main(args):
         closest_idx, closest_dist = find_nn(model, img, val_loader, k)
         nn_img_path = os.path.join(args.output_folder, "nn_img", "image_{}".format(query_indices)) 
         check_dir(nn_img_path)
-        query_img = val_loader.dataset[query_indices]
+        query_img = val_loader.dataset[query_indices[0]]
         logger.info(query_img.shape)
         save_image(query_img, os.path.join(nn_img_path, "image_orig.png"))
         for i, nn_img_idx in enumerate(closest_idx):
-            nn_img = val_loader[nn_img_idx]
+            nn_img = val_loader.dataset[nn_img_idx]
             save_image(nn_img, os.path.join(nn_img_path, "num_{}_image_{}.png".format(i, nn_img_idx)))
         # raise NotImplementedError(
         #     "TODO: retrieve the original NN images, save them and log the results."
