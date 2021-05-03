@@ -187,14 +187,15 @@ def train(loader, model, criterion, optimizer, logger, epoch):
     loss_meter = AverageValueMeter()
     model.train()
     for i, data in enumerate(loader, 0):
+        logger.info("Training {}".format(i))
         # len(loader) gives the number of the bataches
         # len(loader.dataset) gives the number of datapoints in a batch
         inputs, labels = data
         inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         labels_unique = torch.unique(labels)
-        for i, v in enumerate(labels_unique):
+        for o, v in enumerate(labels_unique):
             pos = torch.where(labels == v)
-            labels[pos] = torch.tensor(i, dtype=torch.float, device=DEVICE)
+            labels[pos] = torch.tensor(o, dtype=torch.float, device=DEVICE)
         labels = labels.type(torch.LongTensor)
         optimizer.zero_grad()
         outputs = model(inputs)
@@ -224,12 +225,13 @@ def validate(loader, model, criterion, logger, epoch=0):
     iou_meter = AverageValueMeter()
     model.eval()
     for i, data in enumerate(loader, 0):
+        logger.info("Validation {}".format(i))
         inputs, labels = data
         inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         labels_unique = torch.unique(labels)
-        for i, v in enumerate(labels_unique):
+        for o, v in enumerate(labels_unique):
             pos = torch.where(labels == v)
-            labels[pos] = torch.tensor(i, dtype=torch.float, device=DEVICE)
+            labels[pos] = torch.tensor(o, dtype=torch.float, device=DEVICE)
         labels = labels.type(torch.LongTensor)
         outputs = model(inputs)
         labels = labels.squeeze(dim=1).type(torch.LongTensor).to(DEVICE)
@@ -243,7 +245,7 @@ def validate(loader, model, criterion, logger, epoch=0):
                     "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.3f"
                     % (
                         epoch + 1,
-                        i + 1,
+                        (i + 1),
                         len(loader),
                         loss_meter.mean,
                         iou_meter.mean,
