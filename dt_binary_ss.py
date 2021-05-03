@@ -194,7 +194,7 @@ def validate(loader, model, criterion, logger, epoch=0):
         inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
         outputs = model(inputs)
         labels = torch.where(labels > 0.0,torch.tensor(1., device=DEVICE), torch.tensor(0., device=DEVICE))
-        labels = labels.squeeze(dim=1).type(torch.LongTensor)
+        labels = labels.squeeze(dim=1).type(torch.LongTensor).to(DEVICE)
         outputs = F.interpolate(outputs, size=labels.shape[1:3])
         loss = criterion(outputs, labels)
         iou_meter.add(mIoU(outputs, labels))
