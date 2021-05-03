@@ -69,7 +69,7 @@ def main(args):
     if type(saved_config) == dict:
         model = load_from_weights(model, args.weights_init)
     else:
-        model.load_state_dict(saved_config.state_dict())
+        model.load_state_dict(saved_config.state_dict()).to(device)
 
     # load dataset
     data_root = "./crops/images"
@@ -146,7 +146,7 @@ def find_nn(model, query_img, loader, k):
             continue
         # idx, inputs = item[0], item[1]
         inputs = inputs.to(device)
-        query_features = model.features(query_img)["out"].flatten()
+        query_features = model.features(query_img.to(device))["out"].flatten()
         data_features = model.features(inputs)["out"].flatten()
         l2_distance = torch.dist(data_features, query_features).item()
         closest_dist.append(l2_distance)
