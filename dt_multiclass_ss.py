@@ -210,7 +210,7 @@ def train(loader, model, criterion, optimizer, logger, epoch):
                     % (epoch + 1, i + 1, len(loader), loss_meter.mean)
                 )
         else:
-            if i % 100 == 99:
+            if i % 30 == 29:
                 logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
                     % (epoch + 1, i + 1, len(loader), loss_meter.mean)
@@ -250,7 +250,7 @@ def validate(loader, model, criterion, logger, epoch=0):
                     )
                 )
         else:
-            if i % 50 == 49:
+            if i % 30 == 29:
                 logger.info(
                     "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.3f"
                     % (
