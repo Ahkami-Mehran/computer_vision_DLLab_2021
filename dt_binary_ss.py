@@ -167,13 +167,13 @@ def train(loader, model, criterion, optimizer, logger, epoch):
             if i % 2 == 0:
                 logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
-                    % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
+                    % (epoch + 1, i + 1, len(loader), running_loss / (i + 1))
                 )
         else:
             if i % 100 == 99:
                 logger.info(
                     "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
-                    % (epoch + 1, i + 1, len(loader), running_loss / len(loader.dataset))
+                    % (epoch + 1, i + 1, len(loader), running_loss / (i + 1))
                 )
     return running_loss / len(loader)
 
@@ -200,24 +200,24 @@ def validate(loader, model, criterion, logger, epoch=0):
                         epoch + 1,
                         i + 1,
                         len(loader),
-                        running_loss / len(loader.dataset),
+                        running_loss / (i + 1),
                         running_mIoU,
                     )
                 )
         else:
             if i % 50 == 49:
                 logger.info(
-                    "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.8f"
+                    "Validation: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.3f"
                     % (
                         epoch + 1,
                         i + 1,
                         len(loader),
-                        running_loss / len(loader.dataset),
-                        running_mIoU,
+                        running_loss / (i + 1),
+                        running_mIoU / (i + 1),
                     )
                 )
     # in case of not matching dimentions, use F.interpolate to convert them
-    return running_loss / len(loader), running_mIoU
+    return running_loss / len(loader), running_mIoU / len(loader)
 
 
 def save_model(model, optimizer, args, epoch, val_loss, val_iou, logger, best=False):
