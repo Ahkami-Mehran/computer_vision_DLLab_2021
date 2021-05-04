@@ -137,7 +137,7 @@ def main(args):
 
     best_val_loss = np.inf
     best_val_miou = 0.0
-    for epoch in range(100):
+    for epoch in range(15):
         logger.info("Epoch {}".format(epoch))
         # Train
         t_loss = train(train_loader, model, criterion, optimizer, logger, epoch)
