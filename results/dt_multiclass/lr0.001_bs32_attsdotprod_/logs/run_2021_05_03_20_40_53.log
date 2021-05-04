@@ -1,0 +1,21 @@
+2021-05-03 20:41:14,827 INFO Loading weights from binary_segmentation.pth
+2021-05-03 20:41:15,702 INFO Weights ignored from loaded model: decoder.last_conv.6.bias  decoder.last_conv.6.weight
+2021-05-03 20:41:15,702 INFO Weights ignored from training model: decoder.last_conv.6.weight  decoder.last_conv.6.bias
+2021-05-03 20:41:15,824 INFO Done loading pretrained weights
+2021-05-03 20:41:19,054 INFO Dataset size: 15177 samples
+2021-05-03 20:41:19,055 INFO model_folder = results/dt_multiclass/lr0.001_bs32_attsdotprod_/models  
+exp_name = lr0.001_bs32_attsdotprod_  
+logs_folder = results/dt_multiclass/lr0.001_bs32_attsdotprod_/logs  
+bs = 32  
+pretrained_model_path = binary_segmentation.pth  
+output_folder = results/dt_multiclass/lr0.001_bs32_attsdotprod_  
+lr = 0.001  
+size = 256  
+output_root = results  
+att = sdotprod  
+snapshot_freq = 5  
+exp_suffix =   
+data_folder = COCO_mini5class_medium/
+2021-05-03 20:41:19,055 INFO train_data 15177
+2021-05-03 20:41:19,055 INFO val_data 3000
+2021-05-03 20:41:19,055 INFO Epoch 0

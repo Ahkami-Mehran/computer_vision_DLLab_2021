@@ -1,0 +1,4 @@
+2021-05-03 10:57:06,386 INFO Computing NNs for sample 15
+2021-05-03 10:57:13,305 INFO torch.Size([3, 256, 256])
+2021-05-03 10:57:13,328 INFO The list of k=5 top closest pictures to id=15 are [ 96 672 728 561 936]
+2021-05-03 10:57:13,328 INFO The list of k=5 top closest distances to id=15 are [1.74596143 1.82762814 1.84074819 1.86390448 1.88660264]

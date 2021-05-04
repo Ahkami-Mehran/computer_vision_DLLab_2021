@@ -1,0 +1,321 @@
+2021-05-03 15:56:51,848 INFO Dataset size: 15177 samples
+2021-05-03 15:56:51,849 INFO logs_folder = results/dt_binseg/lr0.01_bs32_size256_downloaded_weights/logs  
+size = 256  
+output_folder = results/dt_binseg/lr0.01_bs32_size256_downloaded_weights  
+model_folder = results/dt_binseg/lr0.01_bs32_size256_downloaded_weights/models  
+output_root = results  
+weights_init = pretrain_weights_init.pth  
+bs = 32  
+exp_suffix = downloaded_weights  
+lr = 0.01  
+data_folder = COCO_mini5class_medium/  
+snapshot_freq = 1  
+exp_name = lr0.01_bs32_size256_downloaded_weights
+2021-05-03 15:56:51,849 INFO train_data 15177
+2021-05-03 15:56:51,849 INFO val_data 3000
+2021-05-03 15:56:51,849 INFO Epoch 0
+2021-05-03 15:58:21,003 INFO Training: [epoch:1, batch:   100/474] loss: 0.316
+2021-05-03 15:59:50,696 INFO Training: [epoch:1, batch:   200/474] loss: 0.293
+2021-05-03 16:01:49,783 INFO Training: [epoch:1, batch:   300/474] loss: 0.279
+2021-05-03 16:03:03,509 INFO Training: [epoch:1, batch:   400/474] loss: 0.271
+2021-05-03 16:03:40,137 INFO Validation: [epoch:1, batch:    50/3000] loss: 0.213 , mean_IoU: 0.288
+2021-05-03 16:03:40,866 INFO Validation: [epoch:1, batch:   100/3000] loss: 0.255 , mean_IoU: 0.337
+2021-05-03 16:03:41,556 INFO Validation: [epoch:1, batch:   150/3000] loss: 0.230 , mean_IoU: 0.346
+2021-05-03 16:03:42,218 INFO Validation: [epoch:1, batch:   200/3000] loss: 0.238 , mean_IoU: 0.355
+2021-05-03 16:03:42,900 INFO Validation: [epoch:1, batch:   250/3000] loss: 0.238 , mean_IoU: 0.357
+2021-05-03 16:03:44,080 INFO Validation: [epoch:1, batch:   300/3000] loss: 0.237 , mean_IoU: 0.356
+2021-05-03 16:03:44,754 INFO Validation: [epoch:1, batch:   350/3000] loss: 0.242 , mean_IoU: 0.353
+2021-05-03 16:03:45,425 INFO Validation: [epoch:1, batch:   400/3000] loss: 0.243 , mean_IoU: 0.356
+2021-05-03 16:03:46,102 INFO Validation: [epoch:1, batch:   450/3000] loss: 0.242 , mean_IoU: 0.353
+2021-05-03 16:03:46,788 INFO Validation: [epoch:1, batch:   500/3000] loss: 0.243 , mean_IoU: 0.358
+2021-05-03 16:03:47,476 INFO Validation: [epoch:1, batch:   550/3000] loss: 0.243 , mean_IoU: 0.359
+2021-05-03 16:03:48,153 INFO Validation: [epoch:1, batch:   600/3000] loss: 0.243 , mean_IoU: 0.358
+2021-05-03 16:03:48,831 INFO Validation: [epoch:1, batch:   650/3000] loss: 0.246 , mean_IoU: 0.356
+2021-05-03 16:03:49,518 INFO Validation: [epoch:1, batch:   700/3000] loss: 0.244 , mean_IoU: 0.358
+2021-05-03 16:03:50,184 INFO Validation: [epoch:1, batch:   750/3000] loss: 0.241 , mean_IoU: 0.359
+2021-05-03 16:03:50,861 INFO Validation: [epoch:1, batch:   800/3000] loss: 0.243 , mean_IoU: 0.362
+2021-05-03 16:03:51,533 INFO Validation: [epoch:1, batch:   850/3000] loss: 0.244 , mean_IoU: 0.361
+2021-05-03 16:03:52,215 INFO Validation: [epoch:1, batch:   900/3000] loss: 0.245 , mean_IoU: 0.366
+2021-05-03 16:03:54,234 INFO Validation: [epoch:1, batch:   950/3000] loss: 0.243 , mean_IoU: 0.369
+2021-05-03 16:03:54,924 INFO Validation: [epoch:1, batch:  1000/3000] loss: 0.241 , mean_IoU: 0.372
+2021-05-03 16:03:55,599 INFO Validation: [epoch:1, batch:  1050/3000] loss: 0.241 , mean_IoU: 0.372
+2021-05-03 16:03:56,266 INFO Validation: [epoch:1, batch:  1100/3000] loss: 0.241 , mean_IoU: 0.373
+2021-05-03 16:03:58,619 INFO Validation: [epoch:1, batch:  1150/3000] loss: 0.241 , mean_IoU: 0.375
+2021-05-03 16:03:59,281 INFO Validation: [epoch:1, batch:  1200/3000] loss: 0.242 , mean_IoU: 0.373
+2021-05-03 16:04:00,221 INFO Validation: [epoch:1, batch:  1250/3000] loss: 0.242 , mean_IoU: 0.374
+2021-05-03 16:04:01,530 INFO Validation: [epoch:1, batch:  1300/3000] loss: 0.241 , mean_IoU: 0.372
+2021-05-03 16:04:02,754 INFO Validation: [epoch:1, batch:  1350/3000] loss: 0.240 , mean_IoU: 0.370
+2021-05-03 16:04:03,518 INFO Validation: [epoch:1, batch:  1400/3000] loss: 0.240 , mean_IoU: 0.370
+2021-05-03 16:04:04,199 INFO Validation: [epoch:1, batch:  1450/3000] loss: 0.241 , mean_IoU: 0.372
+2021-05-03 16:04:04,875 INFO Validation: [epoch:1, batch:  1500/3000] loss: 0.241 , mean_IoU: 0.372
+2021-05-03 16:04:05,551 INFO Validation: [epoch:1, batch:  1550/3000] loss: 0.241 , mean_IoU: 0.372
+2021-05-03 16:04:06,217 INFO Validation: [epoch:1, batch:  1600/3000] loss: 0.238 , mean_IoU: 0.370
+2021-05-03 16:04:06,887 INFO Validation: [epoch:1, batch:  1650/3000] loss: 0.238 , mean_IoU: 0.370
+2021-05-03 16:04:07,572 INFO Validation: [epoch:1, batch:  1700/3000] loss: 0.239 , mean_IoU: 0.370
+2021-05-03 16:04:08,247 INFO Validation: [epoch:1, batch:  1750/3000] loss: 0.238 , mean_IoU: 0.372
+2021-05-03 16:04:08,925 INFO Validation: [epoch:1, batch:  1800/3000] loss: 0.237 , mean_IoU: 0.372
+2021-05-03 16:04:09,615 INFO Validation: [epoch:1, batch:  1850/3000] loss: 0.236 , mean_IoU: 0.372
+2021-05-03 16:04:10,825 INFO Validation: [epoch:1, batch:  1900/3000] loss: 0.237 , mean_IoU: 0.372
+2021-05-03 16:04:12,111 INFO Validation: [epoch:1, batch:  1950/3000] loss: 0.237 , mean_IoU: 0.372
+2021-05-03 16:04:12,949 INFO Validation: [epoch:1, batch:  2000/3000] loss: 0.238 , mean_IoU: 0.373
+2021-05-03 16:04:13,626 INFO Validation: [epoch:1, batch:  2050/3000] loss: 0.238 , mean_IoU: 0.372
+2021-05-03 16:04:14,568 INFO Validation: [epoch:1, batch:  2100/3000] loss: 0.238 , mean_IoU: 0.373
+2021-05-03 16:04:15,247 INFO Validation: [epoch:1, batch:  2150/3000] loss: 0.238 , mean_IoU: 0.373
+2021-05-03 16:04:15,917 INFO Validation: [epoch:1, batch:  2200/3000] loss: 0.237 , mean_IoU: 0.374
+2021-05-03 16:04:16,592 INFO Validation: [epoch:1, batch:  2250/3000] loss: 0.237 , mean_IoU: 0.374
+2021-05-03 16:04:17,272 INFO Validation: [epoch:1, batch:  2300/3000] loss: 0.236 , mean_IoU: 0.373
+2021-05-03 16:04:17,937 INFO Validation: [epoch:1, batch:  2350/3000] loss: 0.236 , mean_IoU: 0.373
+2021-05-03 16:04:18,608 INFO Validation: [epoch:1, batch:  2400/3000] loss: 0.235 , mean_IoU: 0.372
+2021-05-03 16:04:19,289 INFO Validation: [epoch:1, batch:  2450/3000] loss: 0.235 , mean_IoU: 0.373
+2021-05-03 16:04:20,041 INFO Validation: [epoch:1, batch:  2500/3000] loss: 0.235 , mean_IoU: 0.372
+2021-05-03 16:04:20,712 INFO Validation: [epoch:1, batch:  2550/3000] loss: 0.235 , mean_IoU: 0.372
+2021-05-03 16:04:21,400 INFO Validation: [epoch:1, batch:  2600/3000] loss: 0.235 , mean_IoU: 0.373
+2021-05-03 16:04:22,510 INFO Validation: [epoch:1, batch:  2650/3000] loss: 0.235 , mean_IoU: 0.373
+2021-05-03 16:04:24,131 INFO Validation: [epoch:1, batch:  2700/3000] loss: 0.235 , mean_IoU: 0.373
+2021-05-03 16:04:24,809 INFO Validation: [epoch:1, batch:  2750/3000] loss: 0.235 , mean_IoU: 0.372
+2021-05-03 16:04:25,495 INFO Validation: [epoch:1, batch:  2800/3000] loss: 0.234 , mean_IoU: 0.374
+2021-05-03 16:04:26,170 INFO Validation: [epoch:1, batch:  2850/3000] loss: 0.235 , mean_IoU: 0.374
+2021-05-03 16:04:26,845 INFO Validation: [epoch:1, batch:  2900/3000] loss: 0.237 , mean_IoU: 0.374
+2021-05-03 16:04:27,902 INFO Validation: [epoch:1, batch:  2950/3000] loss: 0.236 , mean_IoU: 0.375
+2021-05-03 16:04:28,581 INFO Validation: [epoch:1, batch:  3000/3000] loss: 0.236 , mean_IoU: 0.374
+2021-05-03 16:04:29,404 INFO save model with on epoch0 and validation loss 0.23614189056679638
+2021-05-03 16:04:29,404 INFO Epoch 1
+2021-05-03 16:05:16,580 INFO Training: [epoch:2, batch:   100/474] loss: 0.234
+2021-05-03 16:06:02,903 INFO Training: [epoch:2, batch:   200/474] loss: 0.230
+2021-05-03 16:06:49,664 INFO Training: [epoch:2, batch:   300/474] loss: 0.231
+2021-05-03 16:08:20,054 INFO Training: [epoch:2, batch:   400/474] loss: 0.231
+2021-05-03 16:09:58,619 INFO Validation: [epoch:2, batch:    50/3000] loss: 0.198 , mean_IoU: 0.310
+2021-05-03 16:09:59,598 INFO Validation: [epoch:2, batch:   100/3000] loss: 0.246 , mean_IoU: 0.352
+2021-05-03 16:10:00,880 INFO Validation: [epoch:2, batch:   150/3000] loss: 0.221 , mean_IoU: 0.366
+2021-05-03 16:10:04,381 INFO Validation: [epoch:2, batch:   200/3000] loss: 0.228 , mean_IoU: 0.374
+2021-05-03 16:10:06,445 INFO Validation: [epoch:2, batch:   250/3000] loss: 0.229 , mean_IoU: 0.377
+2021-05-03 16:10:07,444 INFO Validation: [epoch:2, batch:   300/3000] loss: 0.226 , mean_IoU: 0.378
+2021-05-03 16:10:08,631 INFO Validation: [epoch:2, batch:   350/3000] loss: 0.228 , mean_IoU: 0.377
+2021-05-03 16:10:09,926 INFO Validation: [epoch:2, batch:   400/3000] loss: 0.229 , mean_IoU: 0.380
+2021-05-03 16:10:11,053 INFO Validation: [epoch:2, batch:   450/3000] loss: 0.228 , mean_IoU: 0.377
+2021-05-03 16:10:12,493 INFO Validation: [epoch:2, batch:   500/3000] loss: 0.228 , mean_IoU: 0.381
+2021-05-03 16:10:14,122 INFO Validation: [epoch:2, batch:   550/3000] loss: 0.228 , mean_IoU: 0.382
+2021-05-03 16:10:15,326 INFO Validation: [epoch:2, batch:   600/3000] loss: 0.229 , mean_IoU: 0.382
+2021-05-03 16:10:16,673 INFO Validation: [epoch:2, batch:   650/3000] loss: 0.231 , mean_IoU: 0.382
+2021-05-03 16:10:18,372 INFO Validation: [epoch:2, batch:   700/3000] loss: 0.229 , mean_IoU: 0.383
+2021-05-03 16:10:19,788 INFO Validation: [epoch:2, batch:   750/3000] loss: 0.227 , mean_IoU: 0.384
+2021-05-03 16:10:21,264 INFO Validation: [epoch:2, batch:   800/3000] loss: 0.229 , mean_IoU: 0.387
+2021-05-03 16:10:22,963 INFO Validation: [epoch:2, batch:   850/3000] loss: 0.229 , mean_IoU: 0.388
+2021-05-03 16:10:24,733 INFO Validation: [epoch:2, batch:   900/3000] loss: 0.229 , mean_IoU: 0.393
+2021-05-03 16:10:26,497 INFO Validation: [epoch:2, batch:   950/3000] loss: 0.228 , mean_IoU: 0.397
+2021-05-03 16:10:28,055 INFO Validation: [epoch:2, batch:  1000/3000] loss: 0.226 , mean_IoU: 0.399
+2021-05-03 16:10:29,556 INFO Validation: [epoch:2, batch:  1050/3000] loss: 0.227 , mean_IoU: 0.398
+2021-05-03 16:10:30,974 INFO Validation: [epoch:2, batch:  1100/3000] loss: 0.227 , mean_IoU: 0.399
+2021-05-03 16:10:32,193 INFO Validation: [epoch:2, batch:  1150/3000] loss: 0.226 , mean_IoU: 0.401
+2021-05-03 16:10:33,248 INFO Validation: [epoch:2, batch:  1200/3000] loss: 0.227 , mean_IoU: 0.400
+2021-05-03 16:10:35,009 INFO Validation: [epoch:2, batch:  1250/3000] loss: 0.227 , mean_IoU: 0.401
+2021-05-03 16:10:36,651 INFO Validation: [epoch:2, batch:  1300/3000] loss: 0.226 , mean_IoU: 0.400
+2021-05-03 16:10:38,386 INFO Validation: [epoch:2, batch:  1350/3000] loss: 0.225 , mean_IoU: 0.397
+2021-05-03 16:10:40,137 INFO Validation: [epoch:2, batch:  1400/3000] loss: 0.225 , mean_IoU: 0.397
+2021-05-03 16:10:41,595 INFO Validation: [epoch:2, batch:  1450/3000] loss: 0.226 , mean_IoU: 0.399
+2021-05-03 16:10:43,147 INFO Validation: [epoch:2, batch:  1500/3000] loss: 0.225 , mean_IoU: 0.400
+2021-05-03 16:10:44,760 INFO Validation: [epoch:2, batch:  1550/3000] loss: 0.225 , mean_IoU: 0.400
+2021-05-03 16:10:46,518 INFO Validation: [epoch:2, batch:  1600/3000] loss: 0.223 , mean_IoU: 0.398
+2021-05-03 16:10:48,229 INFO Validation: [epoch:2, batch:  1650/3000] loss: 0.223 , mean_IoU: 0.397
+2021-05-03 16:10:49,986 INFO Validation: [epoch:2, batch:  1700/3000] loss: 0.224 , mean_IoU: 0.397
+2021-05-03 16:10:51,733 INFO Validation: [epoch:2, batch:  1750/3000] loss: 0.223 , mean_IoU: 0.398
+2021-05-03 16:10:53,463 INFO Validation: [epoch:2, batch:  1800/3000] loss: 0.222 , mean_IoU: 0.398
+2021-05-03 16:10:55,225 INFO Validation: [epoch:2, batch:  1850/3000] loss: 0.222 , mean_IoU: 0.398
+2021-05-03 16:10:56,997 INFO Validation: [epoch:2, batch:  1900/3000] loss: 0.222 , mean_IoU: 0.399
+2021-05-03 16:10:58,718 INFO Validation: [epoch:2, batch:  1950/3000] loss: 0.222 , mean_IoU: 0.399
+2021-05-03 16:11:00,519 INFO Validation: [epoch:2, batch:  2000/3000] loss: 0.223 , mean_IoU: 0.399
+2021-05-03 16:11:02,276 INFO Validation: [epoch:2, batch:  2050/3000] loss: 0.223 , mean_IoU: 0.399
+2021-05-03 16:11:04,877 INFO Validation: [epoch:2, batch:  2100/3000] loss: 0.223 , mean_IoU: 0.400
+2021-05-03 16:11:06,527 INFO Validation: [epoch:2, batch:  2150/3000] loss: 0.223 , mean_IoU: 0.399
+2021-05-03 16:11:07,958 INFO Validation: [epoch:2, batch:  2200/3000] loss: 0.223 , mean_IoU: 0.401
+2021-05-03 16:11:09,019 INFO Validation: [epoch:2, batch:  2250/3000] loss: 0.222 , mean_IoU: 0.401
+2021-05-03 16:11:09,698 INFO Validation: [epoch:2, batch:  2300/3000] loss: 0.222 , mean_IoU: 0.399
+2021-05-03 16:11:10,719 INFO Validation: [epoch:2, batch:  2350/3000] loss: 0.222 , mean_IoU: 0.399
+2021-05-03 16:11:11,649 INFO Validation: [epoch:2, batch:  2400/3000] loss: 0.220 , mean_IoU: 0.398
+2021-05-03 16:11:12,829 INFO Validation: [epoch:2, batch:  2450/3000] loss: 0.220 , mean_IoU: 0.400
+2021-05-03 16:11:13,530 INFO Validation: [epoch:2, batch:  2500/3000] loss: 0.221 , mean_IoU: 0.399
+2021-05-03 16:11:14,202 INFO Validation: [epoch:2, batch:  2550/3000] loss: 0.220 , mean_IoU: 0.398
+2021-05-03 16:11:14,882 INFO Validation: [epoch:2, batch:  2600/3000] loss: 0.220 , mean_IoU: 0.400
+2021-05-03 16:11:15,566 INFO Validation: [epoch:2, batch:  2650/3000] loss: 0.220 , mean_IoU: 0.399
+2021-05-03 16:11:16,243 INFO Validation: [epoch:2, batch:  2700/3000] loss: 0.220 , mean_IoU: 0.400
+2021-05-03 16:11:16,926 INFO Validation: [epoch:2, batch:  2750/3000] loss: 0.221 , mean_IoU: 0.399
+2021-05-03 16:11:17,604 INFO Validation: [epoch:2, batch:  2800/3000] loss: 0.220 , mean_IoU: 0.401
+2021-05-03 16:11:18,283 INFO Validation: [epoch:2, batch:  2850/3000] loss: 0.221 , mean_IoU: 0.401
+2021-05-03 16:11:18,954 INFO Validation: [epoch:2, batch:  2900/3000] loss: 0.222 , mean_IoU: 0.402
+2021-05-03 16:11:19,638 INFO Validation: [epoch:2, batch:  2950/3000] loss: 0.222 , mean_IoU: 0.403
+2021-05-03 16:11:20,754 INFO Validation: [epoch:2, batch:  3000/3000] loss: 0.222 , mean_IoU: 0.402
+2021-05-03 16:11:22,010 INFO save model with on epoch1 and validation loss 0.22169980009427934
+2021-05-03 16:11:22,010 INFO Epoch 2
+2021-05-03 16:12:28,764 INFO Training: [epoch:3, batch:   100/474] loss: 0.223
+2021-05-03 16:14:00,476 INFO Training: [epoch:3, batch:   200/474] loss: 0.217
+2021-05-03 16:16:02,513 INFO Training: [epoch:3, batch:   300/474] loss: 0.215
+2021-05-03 16:17:31,260 INFO Training: [epoch:3, batch:   400/474] loss: 0.216
+2021-05-03 16:18:39,176 INFO Validation: [epoch:3, batch:    50/3000] loss: 0.196 , mean_IoU: 0.320
+2021-05-03 16:18:40,925 INFO Validation: [epoch:3, batch:   100/3000] loss: 0.247 , mean_IoU: 0.368
+2021-05-03 16:18:42,706 INFO Validation: [epoch:3, batch:   150/3000] loss: 0.221 , mean_IoU: 0.376
+2021-05-03 16:18:45,265 INFO Validation: [epoch:3, batch:   200/3000] loss: 0.225 , mean_IoU: 0.389
+2021-05-03 16:18:46,867 INFO Validation: [epoch:3, batch:   250/3000] loss: 0.224 , mean_IoU: 0.393
+2021-05-03 16:18:48,634 INFO Validation: [epoch:3, batch:   300/3000] loss: 0.223 , mean_IoU: 0.395
+2021-05-03 16:18:50,360 INFO Validation: [epoch:3, batch:   350/3000] loss: 0.225 , mean_IoU: 0.392
+2021-05-03 16:18:52,080 INFO Validation: [epoch:3, batch:   400/3000] loss: 0.225 , mean_IoU: 0.397
+2021-05-03 16:18:53,818 INFO Validation: [epoch:3, batch:   450/3000] loss: 0.225 , mean_IoU: 0.393
+2021-05-03 16:18:55,557 INFO Validation: [epoch:3, batch:   500/3000] loss: 0.226 , mean_IoU: 0.396
+2021-05-03 16:18:57,297 INFO Validation: [epoch:3, batch:   550/3000] loss: 0.224 , mean_IoU: 0.399
+2021-05-03 16:18:59,033 INFO Validation: [epoch:3, batch:   600/3000] loss: 0.225 , mean_IoU: 0.398
+2021-05-03 16:19:00,783 INFO Validation: [epoch:3, batch:   650/3000] loss: 0.226 , mean_IoU: 0.399
+2021-05-03 16:19:02,551 INFO Validation: [epoch:3, batch:   700/3000] loss: 0.225 , mean_IoU: 0.400
+2021-05-03 16:19:04,262 INFO Validation: [epoch:3, batch:   750/3000] loss: 0.222 , mean_IoU: 0.400
+2021-05-03 16:19:06,013 INFO Validation: [epoch:3, batch:   800/3000] loss: 0.224 , mean_IoU: 0.404
+2021-05-03 16:19:07,747 INFO Validation: [epoch:3, batch:   850/3000] loss: 0.224 , mean_IoU: 0.404
+2021-05-03 16:19:09,519 INFO Validation: [epoch:3, batch:   900/3000] loss: 0.225 , mean_IoU: 0.410
+2021-05-03 16:19:11,293 INFO Validation: [epoch:3, batch:   950/3000] loss: 0.223 , mean_IoU: 0.414
+2021-05-03 16:19:13,045 INFO Validation: [epoch:3, batch:  1000/3000] loss: 0.221 , mean_IoU: 0.416
+2021-05-03 16:19:15,189 INFO Validation: [epoch:3, batch:  1050/3000] loss: 0.221 , mean_IoU: 0.417
+2021-05-03 16:19:16,820 INFO Validation: [epoch:3, batch:  1100/3000] loss: 0.221 , mean_IoU: 0.418
+2021-05-03 16:19:18,512 INFO Validation: [epoch:3, batch:  1150/3000] loss: 0.220 , mean_IoU: 0.420
+2021-05-03 16:19:20,224 INFO Validation: [epoch:3, batch:  1200/3000] loss: 0.221 , mean_IoU: 0.419
+2021-05-03 16:19:21,969 INFO Validation: [epoch:3, batch:  1250/3000] loss: 0.221 , mean_IoU: 0.419
+2021-05-03 16:19:23,599 INFO Validation: [epoch:3, batch:  1300/3000] loss: 0.220 , mean_IoU: 0.418
+2021-05-03 16:19:25,072 INFO Validation: [epoch:3, batch:  1350/3000] loss: 0.218 , mean_IoU: 0.415
+2021-05-03 16:19:26,817 INFO Validation: [epoch:3, batch:  1400/3000] loss: 0.218 , mean_IoU: 0.417
+2021-05-03 16:19:28,541 INFO Validation: [epoch:3, batch:  1450/3000] loss: 0.219 , mean_IoU: 0.418
+2021-05-03 16:19:30,277 INFO Validation: [epoch:3, batch:  1500/3000] loss: 0.218 , mean_IoU: 0.419
+2021-05-03 16:19:32,467 INFO Validation: [epoch:3, batch:  1550/3000] loss: 0.219 , mean_IoU: 0.419
+2021-05-03 16:19:34,428 INFO Validation: [epoch:3, batch:  1600/3000] loss: 0.217 , mean_IoU: 0.416
+2021-05-03 16:19:35,892 INFO Validation: [epoch:3, batch:  1650/3000] loss: 0.217 , mean_IoU: 0.416
+2021-05-03 16:19:37,316 INFO Validation: [epoch:3, batch:  1700/3000] loss: 0.217 , mean_IoU: 0.416
+2021-05-03 16:19:39,048 INFO Validation: [epoch:3, batch:  1750/3000] loss: 0.216 , mean_IoU: 0.417
+2021-05-03 16:19:40,779 INFO Validation: [epoch:3, batch:  1800/3000] loss: 0.215 , mean_IoU: 0.417
+2021-05-03 16:19:42,540 INFO Validation: [epoch:3, batch:  1850/3000] loss: 0.215 , mean_IoU: 0.417
+2021-05-03 16:19:44,293 INFO Validation: [epoch:3, batch:  1900/3000] loss: 0.215 , mean_IoU: 0.417
+2021-05-03 16:19:45,909 INFO Validation: [epoch:3, batch:  1950/3000] loss: 0.215 , mean_IoU: 0.417
+2021-05-03 16:19:47,113 INFO Validation: [epoch:3, batch:  2000/3000] loss: 0.216 , mean_IoU: 0.418
+2021-05-03 16:19:48,772 INFO Validation: [epoch:3, batch:  2050/3000] loss: 0.216 , mean_IoU: 0.417
+2021-05-03 16:19:50,414 INFO Validation: [epoch:3, batch:  2100/3000] loss: 0.217 , mean_IoU: 0.418
+2021-05-03 16:19:52,160 INFO Validation: [epoch:3, batch:  2150/3000] loss: 0.217 , mean_IoU: 0.418
+2021-05-03 16:19:53,884 INFO Validation: [epoch:3, batch:  2200/3000] loss: 0.216 , mean_IoU: 0.419
+2021-05-03 16:19:55,623 INFO Validation: [epoch:3, batch:  2250/3000] loss: 0.216 , mean_IoU: 0.419
+2021-05-03 16:19:57,371 INFO Validation: [epoch:3, batch:  2300/3000] loss: 0.215 , mean_IoU: 0.417
+2021-05-03 16:19:59,091 INFO Validation: [epoch:3, batch:  2350/3000] loss: 0.215 , mean_IoU: 0.417
+2021-05-03 16:20:00,826 INFO Validation: [epoch:3, batch:  2400/3000] loss: 0.214 , mean_IoU: 0.416
+2021-05-03 16:20:03,253 INFO Validation: [epoch:3, batch:  2450/3000] loss: 0.214 , mean_IoU: 0.417
+2021-05-03 16:20:04,647 INFO Validation: [epoch:3, batch:  2500/3000] loss: 0.215 , mean_IoU: 0.416
+2021-05-03 16:20:05,798 INFO Validation: [epoch:3, batch:  2550/3000] loss: 0.214 , mean_IoU: 0.416
+2021-05-03 16:20:06,960 INFO Validation: [epoch:3, batch:  2600/3000] loss: 0.214 , mean_IoU: 0.417
+2021-05-03 16:20:08,560 INFO Validation: [epoch:3, batch:  2650/3000] loss: 0.214 , mean_IoU: 0.416
+2021-05-03 16:20:10,306 INFO Validation: [epoch:3, batch:  2700/3000] loss: 0.214 , mean_IoU: 0.417
+2021-05-03 16:20:12,052 INFO Validation: [epoch:3, batch:  2750/3000] loss: 0.214 , mean_IoU: 0.416
+2021-05-03 16:20:13,790 INFO Validation: [epoch:3, batch:  2800/3000] loss: 0.214 , mean_IoU: 0.417
+2021-05-03 16:20:15,522 INFO Validation: [epoch:3, batch:  2850/3000] loss: 0.214 , mean_IoU: 0.418
+2021-05-03 16:20:17,384 INFO Validation: [epoch:3, batch:  2900/3000] loss: 0.215 , mean_IoU: 0.419
+2021-05-03 16:20:19,123 INFO Validation: [epoch:3, batch:  2950/3000] loss: 0.215 , mean_IoU: 0.420
+2021-05-03 16:20:20,903 INFO Validation: [epoch:3, batch:  3000/3000] loss: 0.215 , mean_IoU: 0.419
+2021-05-03 16:20:21,775 INFO save model with on epoch2 and validation loss 0.2149271245247994
+2021-05-03 16:20:21,775 INFO Epoch 3
+2021-05-03 16:22:26,654 INFO Training: [epoch:4, batch:   100/474] loss: 0.208
+2021-05-03 16:23:51,642 INFO Training: [epoch:4, batch:   200/474] loss: 0.208
+2021-05-03 16:25:21,833 INFO Training: [epoch:4, batch:   300/474] loss: 0.207
+2021-05-03 16:26:51,375 INFO Training: [epoch:4, batch:   400/474] loss: 0.207
+2021-05-03 16:28:39,624 INFO Validation: [epoch:4, batch:    50/3000] loss: 0.187 , mean_IoU: 0.296
+2021-05-03 16:28:40,892 INFO Validation: [epoch:4, batch:   100/3000] loss: 0.234 , mean_IoU: 0.347
+2021-05-03 16:28:42,125 INFO Validation: [epoch:4, batch:   150/3000] loss: 0.209 , mean_IoU: 0.357
+2021-05-03 16:28:43,169 INFO Validation: [epoch:4, batch:   200/3000] loss: 0.216 , mean_IoU: 0.370
+2021-05-03 16:28:44,508 INFO Validation: [epoch:4, batch:   250/3000] loss: 0.216 , mean_IoU: 0.374
+2021-05-03 16:28:46,041 INFO Validation: [epoch:4, batch:   300/3000] loss: 0.214 , mean_IoU: 0.373
+2021-05-03 16:28:47,207 INFO Validation: [epoch:4, batch:   350/3000] loss: 0.219 , mean_IoU: 0.371
+2021-05-03 16:28:48,697 INFO Validation: [epoch:4, batch:   400/3000] loss: 0.218 , mean_IoU: 0.376
+2021-05-03 16:28:50,014 INFO Validation: [epoch:4, batch:   450/3000] loss: 0.218 , mean_IoU: 0.373
+2021-05-03 16:28:51,647 INFO Validation: [epoch:4, batch:   500/3000] loss: 0.219 , mean_IoU: 0.375
+2021-05-03 16:28:53,395 INFO Validation: [epoch:4, batch:   550/3000] loss: 0.220 , mean_IoU: 0.376
+2021-05-03 16:28:55,121 INFO Validation: [epoch:4, batch:   600/3000] loss: 0.223 , mean_IoU: 0.375
+2021-05-03 16:28:56,834 INFO Validation: [epoch:4, batch:   650/3000] loss: 0.225 , mean_IoU: 0.374
+2021-05-03 16:28:58,314 INFO Validation: [epoch:4, batch:   700/3000] loss: 0.223 , mean_IoU: 0.376
+2021-05-03 16:28:59,899 INFO Validation: [epoch:4, batch:   750/3000] loss: 0.220 , mean_IoU: 0.378
+2021-05-03 16:29:01,669 INFO Validation: [epoch:4, batch:   800/3000] loss: 0.222 , mean_IoU: 0.382
+2021-05-03 16:29:02,999 INFO Validation: [epoch:4, batch:   850/3000] loss: 0.220 , mean_IoU: 0.383
+2021-05-03 16:29:04,354 INFO Validation: [epoch:4, batch:   900/3000] loss: 0.222 , mean_IoU: 0.387
+2021-05-03 16:29:05,899 INFO Validation: [epoch:4, batch:   950/3000] loss: 0.220 , mean_IoU: 0.390
+2021-05-03 16:29:07,612 INFO Validation: [epoch:4, batch:  1000/3000] loss: 0.218 , mean_IoU: 0.392
+2021-05-03 16:29:09,374 INFO Validation: [epoch:4, batch:  1050/3000] loss: 0.219 , mean_IoU: 0.392
+2021-05-03 16:29:11,110 INFO Validation: [epoch:4, batch:  1100/3000] loss: 0.218 , mean_IoU: 0.393
+2021-05-03 16:29:12,806 INFO Validation: [epoch:4, batch:  1150/3000] loss: 0.217 , mean_IoU: 0.396
+2021-05-03 16:29:14,500 INFO Validation: [epoch:4, batch:  1200/3000] loss: 0.217 , mean_IoU: 0.397
+2021-05-03 16:29:16,110 INFO Validation: [epoch:4, batch:  1250/3000] loss: 0.217 , mean_IoU: 0.397
+2021-05-03 16:29:17,801 INFO Validation: [epoch:4, batch:  1300/3000] loss: 0.216 , mean_IoU: 0.396
+2021-05-03 16:29:19,527 INFO Validation: [epoch:4, batch:  1350/3000] loss: 0.214 , mean_IoU: 0.393
+2021-05-03 16:29:21,215 INFO Validation: [epoch:4, batch:  1400/3000] loss: 0.214 , mean_IoU: 0.394
+2021-05-03 16:29:22,947 INFO Validation: [epoch:4, batch:  1450/3000] loss: 0.215 , mean_IoU: 0.396
+2021-05-03 16:29:24,690 INFO Validation: [epoch:4, batch:  1500/3000] loss: 0.215 , mean_IoU: 0.396
+2021-05-03 16:29:26,423 INFO Validation: [epoch:4, batch:  1550/3000] loss: 0.216 , mean_IoU: 0.395
+2021-05-03 16:29:28,175 INFO Validation: [epoch:4, batch:  1600/3000] loss: 0.214 , mean_IoU: 0.392
+2021-05-03 16:29:30,125 INFO Validation: [epoch:4, batch:  1650/3000] loss: 0.214 , mean_IoU: 0.392
+2021-05-03 16:29:31,886 INFO Validation: [epoch:4, batch:  1700/3000] loss: 0.214 , mean_IoU: 0.391
+2021-05-03 16:29:33,477 INFO Validation: [epoch:4, batch:  1750/3000] loss: 0.213 , mean_IoU: 0.392
+2021-05-03 16:29:34,878 INFO Validation: [epoch:4, batch:  1800/3000] loss: 0.213 , mean_IoU: 0.392
+2021-05-03 16:29:36,272 INFO Validation: [epoch:4, batch:  1850/3000] loss: 0.212 , mean_IoU: 0.392
+2021-05-03 16:29:37,270 INFO Validation: [epoch:4, batch:  1900/3000] loss: 0.213 , mean_IoU: 0.392
+2021-05-03 16:29:38,795 INFO Validation: [epoch:4, batch:  1950/3000] loss: 0.212 , mean_IoU: 0.392
+2021-05-03 16:29:40,040 INFO Validation: [epoch:4, batch:  2000/3000] loss: 0.213 , mean_IoU: 0.393
+2021-05-03 16:29:41,610 INFO Validation: [epoch:4, batch:  2050/3000] loss: 0.213 , mean_IoU: 0.393
+2021-05-03 16:29:43,252 INFO Validation: [epoch:4, batch:  2100/3000] loss: 0.213 , mean_IoU: 0.394
+2021-05-03 16:29:44,987 INFO Validation: [epoch:4, batch:  2150/3000] loss: 0.213 , mean_IoU: 0.393
+2021-05-03 16:29:46,836 INFO Validation: [epoch:4, batch:  2200/3000] loss: 0.213 , mean_IoU: 0.394
+2021-05-03 16:29:48,903 INFO Validation: [epoch:4, batch:  2250/3000] loss: 0.212 , mean_IoU: 0.394
+2021-05-03 16:29:50,376 INFO Validation: [epoch:4, batch:  2300/3000] loss: 0.212 , mean_IoU: 0.393
+2021-05-03 16:29:51,570 INFO Validation: [epoch:4, batch:  2350/3000] loss: 0.212 , mean_IoU: 0.392
+2021-05-03 16:29:53,289 INFO Validation: [epoch:4, batch:  2400/3000] loss: 0.211 , mean_IoU: 0.391
+2021-05-03 16:29:55,043 INFO Validation: [epoch:4, batch:  2450/3000] loss: 0.210 , mean_IoU: 0.392
+2021-05-03 16:29:56,464 INFO Validation: [epoch:4, batch:  2500/3000] loss: 0.211 , mean_IoU: 0.391
+2021-05-03 16:29:57,846 INFO Validation: [epoch:4, batch:  2550/3000] loss: 0.210 , mean_IoU: 0.390
+2021-05-03 16:29:59,995 INFO Validation: [epoch:4, batch:  2600/3000] loss: 0.211 , mean_IoU: 0.392
+2021-05-03 16:30:02,559 INFO Validation: [epoch:4, batch:  2650/3000] loss: 0.210 , mean_IoU: 0.392
+2021-05-03 16:30:05,230 INFO Validation: [epoch:4, batch:  2700/3000] loss: 0.211 , mean_IoU: 0.392
+2021-05-03 16:30:06,740 INFO Validation: [epoch:4, batch:  2750/3000] loss: 0.211 , mean_IoU: 0.391
+2021-05-03 16:30:08,310 INFO Validation: [epoch:4, batch:  2800/3000] loss: 0.210 , mean_IoU: 0.393
+2021-05-03 16:30:09,838 INFO Validation: [epoch:4, batch:  2850/3000] loss: 0.211 , mean_IoU: 0.393
+2021-05-03 16:30:11,587 INFO Validation: [epoch:4, batch:  2900/3000] loss: 0.212 , mean_IoU: 0.394
+2021-05-03 16:30:13,321 INFO Validation: [epoch:4, batch:  2950/3000] loss: 0.212 , mean_IoU: 0.394
+2021-05-03 16:30:15,100 INFO Validation: [epoch:4, batch:  3000/3000] loss: 0.212 , mean_IoU: 0.394
+2021-05-03 16:30:15,979 INFO save model with on epoch3 and validation loss 0.2123331861322126
+2021-05-03 16:30:15,980 INFO Epoch 4
+2021-05-03 16:31:47,224 INFO Training: [epoch:5, batch:   100/474] loss: 0.195
+2021-05-03 16:33:50,363 INFO Training: [epoch:5, batch:   200/474] loss: 0.197
+2021-05-03 16:35:16,190 INFO Training: [epoch:5, batch:   300/474] loss: 0.197
+2021-05-03 16:36:48,690 INFO Training: [epoch:5, batch:   400/474] loss: 0.198
+2021-05-03 16:38:01,528 INFO Validation: [epoch:5, batch:    50/3000] loss: 0.187 , mean_IoU: 0.317
+2021-05-03 16:38:02,943 INFO Validation: [epoch:5, batch:   100/3000] loss: 0.236 , mean_IoU: 0.364
+2021-05-03 16:38:04,719 INFO Validation: [epoch:5, batch:   150/3000] loss: 0.211 , mean_IoU: 0.370
+2021-05-03 16:38:06,446 INFO Validation: [epoch:5, batch:   200/3000] loss: 0.214 , mean_IoU: 0.386
+2021-05-03 16:38:08,202 INFO Validation: [epoch:5, batch:   250/3000] loss: 0.215 , mean_IoU: 0.392
+2021-05-03 16:38:09,967 INFO Validation: [epoch:5, batch:   300/3000] loss: 0.213 , mean_IoU: 0.391
+2021-05-03 16:38:11,822 INFO Validation: [epoch:5, batch:   350/3000] loss: 0.215 , mean_IoU: 0.387
+2021-05-03 16:38:13,463 INFO Validation: [epoch:5, batch:   400/3000] loss: 0.215 , mean_IoU: 0.392
+2021-05-03 16:38:15,090 INFO Validation: [epoch:5, batch:   450/3000] loss: 0.216 , mean_IoU: 0.389
+2021-05-03 16:38:16,645 INFO Validation: [epoch:5, batch:   500/3000] loss: 0.218 , mean_IoU: 0.392
+2021-05-03 16:38:18,409 INFO Validation: [epoch:5, batch:   550/3000] loss: 0.218 , mean_IoU: 0.393
+2021-05-03 16:38:20,067 INFO Validation: [epoch:5, batch:   600/3000] loss: 0.217 , mean_IoU: 0.393
+2021-05-03 16:38:21,808 INFO Validation: [epoch:5, batch:   650/3000] loss: 0.219 , mean_IoU: 0.393
+2021-05-03 16:38:23,565 INFO Validation: [epoch:5, batch:   700/3000] loss: 0.218 , mean_IoU: 0.395
+2021-05-03 16:38:25,286 INFO Validation: [epoch:5, batch:   750/3000] loss: 0.215 , mean_IoU: 0.395
+2021-05-03 16:38:50,235 INFO Validation: [epoch:5, batch:   800/3000] loss: 0.217 , mean_IoU: 0.399
+2021-05-03 16:38:59,213 INFO Validation: [epoch:5, batch:   850/3000] loss: 0.216 , mean_IoU: 0.400
+2021-05-03 16:39:05,182 INFO Validation: [epoch:5, batch:   900/3000] loss: 0.217 , mean_IoU: 0.404
+2021-05-03 16:39:11,375 INFO Validation: [epoch:5, batch:   950/3000] loss: 0.215 , mean_IoU: 0.407
+2021-05-03 16:39:16,090 INFO Validation: [epoch:5, batch:  1000/3000] loss: 0.214 , mean_IoU: 0.408
+2021-05-03 16:39:20,403 INFO Validation: [epoch:5, batch:  1050/3000] loss: 0.215 , mean_IoU: 0.408
+2021-05-03 16:39:24,580 INFO Validation: [epoch:5, batch:  1100/3000] loss: 0.215 , mean_IoU: 0.409
+2021-05-03 16:39:26,940 INFO Validation: [epoch:5, batch:  1150/3000] loss: 0.214 , mean_IoU: 0.411
+2021-05-03 16:39:29,529 INFO Validation: [epoch:5, batch:  1200/3000] loss: 0.214 , mean_IoU: 0.411
+2021-05-03 16:39:31,457 INFO Validation: [epoch:5, batch:  1250/3000] loss: 0.214 , mean_IoU: 0.412
+2021-05-03 16:39:32,909 INFO Validation: [epoch:5, batch:  1300/3000] loss: 0.214 , mean_IoU: 0.410
+2021-05-03 16:39:34,974 INFO Validation: [epoch:5, batch:  1350/3000] loss: 0.212 , mean_IoU: 0.407
+2021-05-03 16:39:36,371 INFO Validation: [epoch:5, batch:  1400/3000] loss: 0.212 , mean_IoU: 0.408
+2021-05-03 16:39:37,488 INFO Validation: [epoch:5, batch:  1450/3000] loss: 0.213 , mean_IoU: 0.409
+2021-05-03 16:39:38,648 INFO Validation: [epoch:5, batch:  1500/3000] loss: 0.212 , mean_IoU: 0.410
+2021-05-03 16:39:39,746 INFO Validation: [epoch:5, batch:  1550/3000] loss: 0.212 , mean_IoU: 0.410
+2021-05-03 16:39:41,011 INFO Validation: [epoch:5, batch:  1600/3000] loss: 0.211 , mean_IoU: 0.407
+2021-05-03 16:39:42,079 INFO Validation: [epoch:5, batch:  1650/3000] loss: 0.211 , mean_IoU: 0.407
+2021-05-03 16:39:43,847 INFO Validation: [epoch:5, batch:  1700/3000] loss: 0.211 , mean_IoU: 0.407
+2021-05-03 16:39:44,823 INFO Validation: [epoch:5, batch:  1750/3000] loss: 0.210 , mean_IoU: 0.408
+2021-05-03 16:39:46,086 INFO Validation: [epoch:5, batch:  1800/3000] loss: 0.210 , mean_IoU: 0.407
+2021-05-03 16:39:47,498 INFO Validation: [epoch:5, batch:  1850/3000] loss: 0.210 , mean_IoU: 0.407
