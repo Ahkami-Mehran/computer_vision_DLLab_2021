@@ -192,7 +192,6 @@ def train(loader, model, criterion, optimizer, logger, epoch):
 
     model.train()
     for i, data in enumerate(loader, 0):
-        logger.info("Training {}".format(i))
         # len(loader) gives the number of the bataches
         # len(loader.dataset) gives the number of datapoints in a batch
         inputs, labels = data

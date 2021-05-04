@@ -156,12 +156,14 @@ def main(args):
         # TODO save model
         if v_loss < best_val_loss:
             best_val_loss = v_loss
-            torch.save(model.state_dict(), os.path.join(args.model_folder, "model.pth"))
-            logger.info(
-                "save model with on epoch{} and validation loss {}".format(
-                    epoch, best_val_loss
-                )
-            )
+            best_val_miou = v_mIoU
+            save_model(model, optimizer, args, epoch, best_val_loss, best_val_miou, logger, best=True)
+            # torch.save(model.state_dict(), os.path.join(args.model_folder, "model.pth"))
+            # logger.info(
+            #     "save model with on epoch{} and validation loss {}".format(
+            #         epoch, best_val_loss
+            #     )
+            # )
         global_step = epoch
 
 
