@@ -150,12 +150,15 @@ def main(args):
 
     best_val_loss = np.inf
     best_val_miou = 0.0
-    for epoch in range(100):
+    for epoch in range(15):
         logger.info("Epoch {}".format(epoch))
         # Train
-        t_loss = train(train_loader, model, criterion, optimizer, logger, epoch)
+        t_loss, t_mIoU = train(train_loader, model, criterion, optimizer, logger, epoch)
         writer.add_scalar(
             tag="Training/Mean_loss", scalar_value=t_loss, global_step=epoch
+        )
+        writer.add_scalar(
+            tag="Training/Mean_IoU", scalar_value=t_mIoU, global_step=epoch
         )
         # Validate
         v_loss, v_mIoU = validate(val_loader, model, criterion, logger, epoch)
@@ -185,6 +188,8 @@ def main(args):
 def train(loader, model, criterion, optimizer, logger, epoch):
     # raise NotImplementedError("TODO: training routine")
     loss_meter = AverageValueMeter()
+    iou_meter = AverageValueMeter()
+
     model.train()
     for i, data in enumerate(loader, 0):
         logger.info("Training {}".format(i))
@@ -203,20 +208,33 @@ def train(loader, model, criterion, optimizer, logger, epoch):
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
+        iou_meter.add(instance_mIoU(outputs, labels))
         loss_meter.add(loss.item())
         if DEVICE.type == "cpu":
             if i % 2 == 0:
                 logger.info(
-                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
-                    % (epoch + 1, i + 1, len(loader), loss_meter.mean)
+                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.3f"
+                    % (
+                        epoch + 1,
+                        (i + 1),
+                        len(loader),
+                        loss_meter.mean,
+                        iou_meter.mean,
+                    )
                 )
         else:
-            if i % 10 == 9:
+            if i % 40 == 39:
                 logger.info(
-                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f"
-                    % (epoch + 1, i + 1, len(loader), loss_meter.mean)
+                    "Training: [epoch:%d, batch: %5d/%d] loss: %.3f , mean_IoU: %.3f"
+                    % (
+                        epoch + 1,
+                        i + 1,
+                        len(loader),
+                        loss_meter.mean,
+                        iou_meter.mean,
+                    )
                 )
-    return loss_meter.mean
+    return loss_meter.mean, iou_meter.mean
 
 
 def validate(loader, model, criterion, logger, epoch=0):
