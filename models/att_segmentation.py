@@ -6,7 +6,7 @@ from torchvision.models._utils import IntermediateLayerGetter
 try:
     from deeplab_decoder import Decoder
     from attention_layer import Attention
-except ModuleNotFoundError:
+except ImportError:
     from .deeplab_decoder import Decoder
     from .attention_layer import Attention
 
