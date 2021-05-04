@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -54,15 +55,49 @@ class AdditiveAttention(nn.Module):
 class DotProdAttention(nn.Module):
     def __init__(self, encoder_dim):
         super(DotProdAttention, self).__init__()
-        raise NotImplementedError("TODO: Implement attention layer")
+        self.scale = 1.0/np.sqrt(encoder_dim)
+        self.softmax = nn.Softmax(dim=2)
+        # raise NotImplementedError("TODO: Implement attention layer")
 
     def forward(self, encoder_output, hidden_state):
         # Verify sizes
-        return context, alpha
+        # query: [B,Q] (hidden state, decoder output, etc.)
+        # keys: [T,B,K] (encoder outputs)
+        # values: [T,B,V] (encoder outputs)
+        # assume Q == K
+        
+        # compute energy
+        query = hidden_state
+        keys = encoder_output
+        values = encoder_output
+        
+        ## Source: https://gist.github.com/shreydesai/3b4c5ee9ea135a7693c5886078257371
+
+        # print("Hidden_state shape: {}".format(hidden_state.shape))
+        # print(encoder_output.shape)
+        # print(encoder_output)
+        query = query.unsqueeze(1) # [B,Q] -> [B,1,Q]
+        keys = keys.permute((0,2,1)) # [T,B,K] -> [B,K,T]
+        # print(query.shape)
+        # print(keys.shape)
+        energy = torch.bmm(query, keys) # [B,1,Q]*[B,K,T] = [B,1,T]
+        # energy = self.softmax(energy.mul_(self.scale))
+        
+        # # apply mask, renormalize
+        # energy = energy*mask
+        # energy.div(energy.sum(2, keepdim=True))
+
+        # weight values
+        # values = values.transpose(0,1) # [T,B,V] -> [B,T,V]
+        # values = values.permute(0, )
+        combo = torch.bmm(energy, values).squeeze(1) # [B,1,T]*[B,T,V] -> [B,V]
+
+        # return context, alpha
+        return combo, energy
 
 
 if __name__ == "__main__":
-    model = Attention(512, "additive").to(device)
+    model = Attention(512, "dotprod").to(device)
     model.eval()
     print(model)
     encoder_output = torch.randn(2, 256, 512).to(device)

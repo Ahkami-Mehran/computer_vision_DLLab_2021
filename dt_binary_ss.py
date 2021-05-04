@@ -68,7 +68,7 @@ def main(args):
     pretrained_model = ResNet18Backbone(pretrained=False).to(DEVICE)
     # pretrained_model = load_from_weights(pretrained_model, args.weights_init, logger=logger)
     saved_config = torch.load(args.weights_init, map_location=DEVICE)
-    pretrained_model.load_state_dict(saved_config["model"])
+    pretrained_model.load_state_dict(saved_config)
     # raise NotImplementedError("TODO: build model and load pretrained weights")
     # model = Segmentator(2, pretrained_model.features, img_size).to(DEVICE)
     # in case of BCEWtihLogistLOss I change the channel count to 1
