@@ -6,6 +6,6 @@ binary_segmentation.pth
 data/__pycache__
 utils/__pycache__
 models/__pycache__
-
+results
 unlabelled_dataset.zip
 
